@@ -2,6 +2,9 @@
 #define GAME_HPP
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
+#include <iostream>
 
 class Game {
 public:
@@ -21,6 +24,7 @@ private:
     bool isRunning;
     SDL_Window *window;
     SDL_Renderer *renderer;
+    SDL_Texture* start;
 };
 
 #endif /* GAME_HPP */

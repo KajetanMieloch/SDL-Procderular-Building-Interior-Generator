@@ -1,9 +1,10 @@
-#include <SDL2/SDL_ttf.h>
 #include "game.hpp"
 #include "game.cpp"
 
 
 Game *game = NULL;
+SDL_Texture* start;
+
 
 int main(int argc, const char* argv[]) {
 
