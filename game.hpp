@@ -18,13 +18,19 @@ public:
     void render();
     void clean();
 
+    SDL_Renderer* getRenderer(); // Correct return type
+    TTF_Font* getFont();        // Correct return type
+    void setRunning(bool running) { isRunning = running; }
+
     bool running() { return isRunning; }
 
 private:
     bool isRunning;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
     SDL_Texture* start;
+    TTF_Font* font;
 };
+
 
 #endif /* GAME_HPP */

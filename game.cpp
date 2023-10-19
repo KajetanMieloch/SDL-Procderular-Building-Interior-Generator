@@ -5,6 +5,7 @@ Game::~Game() {}
 
 int cnt = 0;
 
+
 void Game::init(const char *title, int xpos, int ypos, int width, int height, bool fullscreen) {
     int flags = 0;
     if (fullscreen) {
@@ -22,6 +23,11 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, bo
             std::cout << "Renderer created!" << std::endl;
         }
         isRunning = true;
+        font = TTF_OpenFont("res/arial.ttf", 24);
+        if (!font) {
+            // Handle font loading failure
+            std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
+        }
     } else {
         isRunning = false;
     }
@@ -30,6 +36,16 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, bo
     start = SDL_CreateTextureFromSurface(renderer, tmpSurface);
     SDL_FreeSurface(tmpSurface);
 }
+
+//Game renderer
+SDL_Renderer* Game::getRenderer() {
+    return renderer;
+}
+
+TTF_Font* Game::getFont() {
+    return font;
+}
+
 
 void Game::handleEvents() {
     SDL_Event event;
@@ -54,6 +70,7 @@ void Game::render() {
 }
 
 void Game::clean() {
+    TTF_CloseFont(font); // Close the font when you're done with it
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_Quit();
