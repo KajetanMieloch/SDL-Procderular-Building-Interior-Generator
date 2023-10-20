@@ -16,7 +16,7 @@ int main(int argc, const char* argv[]) {
 
     mainMenu = new Menu(game->getRenderer(), game->getFont());
 
-    while (game->running()) {
+    while (game->getRunning()) {
         while (SDL_PollEvent(&event)) {
             if (inMenu) {
                 mainMenu->handleEvents(event);

@@ -7,29 +7,30 @@
 #include <iostream>
 
 class Game {
+private:
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    TTF_Font* font;
+    bool isRunning;
+    SDL_Texture* start;
+    const int FPS = 60;
+    const int frameDelay = 1000 / FPS;
+    Uint32 frameStart;
+    int frameTime;
+
 public:
     Game();
     ~Game();
-
     void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
-
+    SDL_Renderer* getRenderer();
+    TTF_Font* getFont();
     void handleEvents();
     void update();
     void render();
     void clean();
-
-    SDL_Renderer* getRenderer(); // Correct return type
-    TTF_Font* getFont();        // Correct return type
-    void setRunning(bool running) { isRunning = running; }
-
-    bool running() { return isRunning; }
-
-private:
-    bool isRunning;
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Texture* start;
-    TTF_Font* font;
+    void drawText(const char* text, int x, int y, int w, int h);
+    bool getRunning();
+    void setRunning(bool running);
 };
 
 
