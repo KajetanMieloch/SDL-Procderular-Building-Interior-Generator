@@ -29,6 +29,7 @@ int main(int argc, const char* argv[]) {
                     game->setRunning(false);  // Quit the game
                 }
             } else {
+                game->run();
                 game->handleEvents();
                 game->update();
                 game->render();

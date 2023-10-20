@@ -14,9 +14,10 @@ private:
     bool isRunning;
     SDL_Texture* start;
     const int FPS = 60;
-    const int frameDelay = 1000 / FPS;
-    Uint32 frameStart;
-    int frameTime;
+    const double frameDelay = 1000.0 / FPS;
+    Uint64 lastFrameTime;
+    int cameraX;
+    int cameraY;
 
 public:
     Game();
@@ -28,9 +29,9 @@ public:
     void update();
     void render();
     void clean();
-    void drawText(const char* text, int x, int y, int w, int h);
-    bool getRunning();
-    void setRunning(bool running);
+    void run();
+    bool getRunning() { return isRunning; }
+    void setRunning(bool running) { isRunning = running; }
 };
 
 
