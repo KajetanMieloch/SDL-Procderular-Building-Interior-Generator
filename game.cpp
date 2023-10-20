@@ -27,7 +27,7 @@ void Game::init(const char *title, int xpos, int ypos, int width, int height, bo
             // Handle TTF initialization failure
             std::cerr << "Failed to initialize TTF: " << TTF_GetError() << std::endl;
         } else {
-            font = TTF_OpenFont("res/Arial.ttf", 24);
+            font = TTF_OpenFont("res/Arial.ttf", 30);
             if (!font) {
                 // Handle font loading failure
                 std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;

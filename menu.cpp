@@ -3,14 +3,14 @@
 
 Menu::Menu(SDL_Renderer* renderer, TTF_Font* font) : renderer(renderer), font(font), isRunning(true) {
 
-    playButton.x = 100;
-    playButton.y = 100;
-    playButton.w = 200;
+    playButton.x = (1920-100)/2;
+    playButton.y = 500;
+    playButton.w = 100;
     playButton.h = 50;
 
-    quitButton.x = 100;
-    quitButton.y = 200;
-    quitButton.w = 200;
+    quitButton.x = (1920-100)/2;
+    quitButton.y = 600;
+    quitButton.w = 100;
     quitButton.h = 50;
 
 }
@@ -25,7 +25,7 @@ void Menu::render() {
     SDL_RenderClear(renderer);
 
 
-    drawText("Main Menu", 100, 50, 200, 50);
+    drawText("Main Menu", (1920-200)/2, 400, 200, 50);
     drawText("Play", playButton.x, playButton.y, playButton.w, playButton.h);
     drawText("Quit", quitButton.x, quitButton.y, quitButton.w, quitButton.h);
 
