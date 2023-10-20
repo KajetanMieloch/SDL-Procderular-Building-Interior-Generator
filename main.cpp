@@ -11,7 +11,7 @@ int main(int argc, const char* argv[]) {
     SDL_Init(SDL_INIT_EVERYTHING);
 
     game = new Game();
-    game->init("Interior generator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+    game->init("Interior generator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, true);
 
 
     mainMenu = new Menu(game->getRenderer(), game->getFont());
@@ -25,14 +25,15 @@ int main(int argc, const char* argv[]) {
                     inMenu = false;  // Exit the menu
                     game->setRunning(true);  // Start the game
                 }
+                if (mainMenu->quitGame()) {
+                    game->setRunning(false);  // Quit the game
+                }
             } else {
                 game->handleEvents();
                 game->update();
                 game->render();
             }
         }
-
-        std::cout << inMenu << std::endl;
     }
 
     game->clean();

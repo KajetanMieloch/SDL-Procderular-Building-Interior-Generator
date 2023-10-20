@@ -15,6 +15,9 @@ public:
     bool isMenuRunning() {
         return isRunning;
     }
+    bool quitGame() {
+        return quit;
+    }
 
 private:
     SDL_Renderer* renderer;
@@ -24,6 +27,7 @@ private:
     SDL_Color textColor;
 
     bool isRunning;
+    bool quit;
 
     void drawText(const char* text, int x, int y, int w, int h);
 };

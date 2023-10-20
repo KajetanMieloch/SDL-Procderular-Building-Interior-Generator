@@ -24,6 +24,7 @@ void Menu::render() {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // Set background color to red
     SDL_RenderClear(renderer);
 
+
     drawText("Main Menu", 100, 50, 200, 50);
     drawText("Play", playButton.x, playButton.y, playButton.w, playButton.h);
     drawText("Quit", quitButton.x, quitButton.y, quitButton.w, quitButton.h);
@@ -52,11 +53,11 @@ void Menu::handleEvents(SDL_Event& event) {
             if (mouseX >= playButton.x && mouseX <= playButton.x + playButton.w &&
                 mouseY >= playButton.y && mouseY <= playButton.y + playButton.h) {
                 std::cout << "Play button clicked" << std::endl;
-                // Add code to start the game
+                isRunning = false;
             } else if (mouseX >= quitButton.x && mouseX <= quitButton.x + quitButton.w &&
                        mouseY >= quitButton.y && mouseY <= quitButton.y + quitButton.h) {
                 std::cout << "Quit button clicked" << std::endl;
-                isRunning = false;
+                quit = true;
             }
         }
     }
