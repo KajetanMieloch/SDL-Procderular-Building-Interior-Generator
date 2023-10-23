@@ -1,4 +1,5 @@
 #include "game.hpp"
+#include "rectangle.hpp"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -126,8 +127,8 @@ void Game::render() {
     double frameTime = (currentFrameTime - lastFrameTime) * 1000.0 / SDL_GetPerformanceFrequency();
     lastFrameTime = currentFrameTime;
 
-    // Set the background color to black
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // Set the background color to white
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     // Clear the screen
     SDL_RenderClear(renderer);
@@ -137,9 +138,10 @@ void Game::render() {
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &rect);
 
-    // Render the FPS
-    std::stringstream ss;
-    ss << "FPS: " << 1000.0 / frameTime;
+    // Render the rectangle texture in the middle of the screen, adjusted for the camera position
+    Rectangle rectangle(renderer, 0 - cameraX, 0 - cameraY, 100, 100);
+    rectangle.render();
+
 
     // Update the screen
     SDL_RenderPresent(renderer);
