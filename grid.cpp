@@ -49,3 +49,18 @@ void Grid::handleEvent(SDL_Event& e) {
         }
     }
 }
+
+bool Grid::isTileClicked(int x, int y) {
+    return grid[x][y];
+}
+
+void Grid::setTileClicked(int x, int y, bool clicked) {
+    grid[x][y] = clicked;
+}
+
+void Grid::handleMouseClick(int x, int y) {
+    if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+        // Mark the clicked tile
+        grid[x][y] = true;
+    }
+}

@@ -11,6 +11,10 @@ public:
     static const int TILE_SIZE = 32; // Set the desired size of each tile
     static const int GRID_SIZE = 50; // Set the desired size of the grid
 
+    bool isTileClicked(int x, int y);
+    void setTileClicked(int x, int y, bool clicked);
+    void handleMouseClick(int x, int y);
+
     void render();
     void handleEvent(SDL_Event& e);
 

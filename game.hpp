@@ -5,12 +5,14 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
+#include "grid.hpp"
 
 class Game {
 private:
     SDL_Window* window;
     SDL_Renderer* renderer;
     TTF_Font* font;
+    Grid* grid;
     bool isRunning;
     SDL_Texture* start;
     const int FPS = 60;

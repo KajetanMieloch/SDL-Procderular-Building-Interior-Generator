@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include "grid.hpp"
 
 
 Game::Game() {}
@@ -38,11 +39,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         isRunning = false;
     }
 
-    start = IMG_LoadTexture(renderer, "res/start.png");
-
     // Initialize the camera position to (0, 0)
     cameraX = 0;
     cameraY = 0;
+
+    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
 
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();
@@ -79,6 +80,10 @@ TTF_Font* Game::getFont() {
 void Game::handleEvents() {
     SDL_Event event;
     SDL_PollEvent(&event);
+    
+    int adjustedX = 0; // Declare the variables here with initial values
+    int adjustedY = 0;
+
     switch (event.type) {
         case SDL_QUIT:
             isRunning = false;
@@ -86,28 +91,36 @@ void Game::handleEvents() {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
                 case SDLK_LEFT:
-                case SDLK_a: // Detect the 'A' key
+                case SDLK_a:
                     // Move the camera left
-                    cameraX -= 10;
+                    cameraX -= Grid::TILE_SIZE;
                     break;
                 case SDLK_RIGHT:
-                case SDLK_d: // Detect the 'D' key
+                case SDLK_d:
                     // Move the camera right
-                    cameraX += 10;
+                    cameraX += Grid::TILE_SIZE;
                     break;
                 case SDLK_UP:
-                case SDLK_w: // Detect the 'W' key
+                case SDLK_w:
                     // Move the camera up
-                    cameraY -= 10;
+                    cameraY -= Grid::TILE_SIZE;
                     break;
                 case SDLK_DOWN:
-                case SDLK_s: // Detect the 'S' key
+                case SDLK_s:
                     // Move the camera down
-                    cameraY += 10;
+                    cameraY += Grid::TILE_SIZE;
                     break;
                 default:
                     break;
             }
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            // Adjust the mouse coordinates for camera position
+            adjustedX = (event.button.x + cameraX) / Grid::TILE_SIZE;
+            adjustedY = (event.button.y + cameraY) / Grid::TILE_SIZE;
+
+            // Pass the adjusted mouse coordinates to the grid
+            grid->handleMouseClick(adjustedX, adjustedY);
             break;
         default:
             break;
@@ -119,29 +132,35 @@ void Game::update() {
 }
 
 void Game::render() {
-    // Get the current time
-    Uint64 currentFrameTime = SDL_GetPerformanceCounter();
-
-    // Calculate the time elapsed since the last frame
-    double frameTime = (currentFrameTime - lastFrameTime) * 1000.0 / SDL_GetPerformanceFrequency();
-    lastFrameTime = currentFrameTime;
-
-    // Set the background color to black
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    // Set the background color to white
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
     // Clear the screen
     SDL_RenderClear(renderer);
 
-    // Render the white rectangle in the middle of the screen, adjusted for the camera position
-    SDL_Rect rect = { 245 - cameraX, 245 - cameraY, 10, 10 };
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderFillRect(renderer, &rect);
+    // Render the visible portion of the grid based on the camera position
+    int startX = cameraX / Grid::TILE_SIZE;
+    int startY = cameraY / Grid::TILE_SIZE;
+    int endX = startX + Grid::GRID_SIZE;
+    int endY = startY + Grid::GRID_SIZE;
 
-    // Render the FPS
-    std::stringstream ss;
-    ss << "FPS: " << 1000.0 / frameTime;
+    for (int x = startX; x < endX; x++) {
+        for (int y = startY; y < endY; y++) {
+            if (x >= 0 && x < Grid::GRID_SIZE && y >= 0 && y < Grid::GRID_SIZE) {
+                SDL_Rect rect = {(x - startX) * Grid::TILE_SIZE, (y - startY) * Grid::TILE_SIZE, Grid::TILE_SIZE, Grid::TILE_SIZE};
 
-    // Update the screen
+                if (grid->isTileClicked(x, y)) {
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black for clicked tiles
+                } else {
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
+                }
+
+                SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
+
+    // Present the rendered frame
     SDL_RenderPresent(renderer);
 }
 
@@ -149,6 +168,7 @@ void Game::clean() {
     TTF_CloseFont(font);
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    delete grid;
     SDL_Quit();
     std::cout << "Game cleaned!" << std::endl;
 }
