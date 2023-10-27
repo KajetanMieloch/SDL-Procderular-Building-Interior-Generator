@@ -23,21 +23,6 @@ Grid::~Grid() {
     delete[] grid;
 }
 
-void Grid::render() {
-    for (int i = 0; i < visibleSize; i++) {
-        for (int j = 0; j < visibleSize; j++) {
-            SDL_Rect rect = {i * tileSize, j * tileSize, tileSize, tileSize};
-
-            if (grid[i][j]) {
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
-            } else {
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
-            }
-
-            SDL_RenderFillRect(renderer, &rect);
-        }
-    }
-}
 
 void Grid::handleEvent(SDL_Event& e) {
     if (e.type == SDL_MOUSEBUTTONDOWN) {
