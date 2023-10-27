@@ -49,3 +49,22 @@ void Grid::handleMouseClick(int x, int y) {
         grid[x][y] = true;
     }
 }
+
+
+void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY) {
+        for (int x = startX; x < endX; x++) {
+            for (int y = startY; y < endY; y++) {
+                if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+                    SDL_Rect rect = {(x - startX) * TILE_SIZE, (y - startY) * TILE_SIZE, TILE_SIZE, TILE_SIZE};
+
+                    if (isTileClicked(x, y)) {
+                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black for clicked tiles
+                    } else {
+                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
+                    }
+
+                    SDL_RenderFillRect(renderer, &rect);
+                }
+            }
+        }
+}

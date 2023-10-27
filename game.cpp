@@ -144,21 +144,7 @@ void Game::render() {
     int endX = startX + Grid::GRID_SIZE;
     int endY = startY + Grid::GRID_SIZE;
 
-    for (int x = startX; x < endX; x++) {
-        for (int y = startY; y < endY; y++) {
-            if (x >= 0 && x < Grid::GRID_SIZE && y >= 0 && y < Grid::GRID_SIZE) {
-                SDL_Rect rect = {(x - startX) * Grid::TILE_SIZE, (y - startY) * Grid::TILE_SIZE, Grid::TILE_SIZE, Grid::TILE_SIZE};
-
-                if (grid->isTileClicked(x, y)) {
-                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black for clicked tiles
-                } else {
-                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
-                }
-
-                SDL_RenderFillRect(renderer, &rect);
-            }
-        }
-    }
+    grid->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
 
     // Present the rendered frame
     SDL_RenderPresent(renderer);

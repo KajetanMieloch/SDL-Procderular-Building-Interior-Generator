@@ -14,7 +14,8 @@ public:
     bool isTileClicked(int x, int y);
     void setTileClicked(int x, int y, bool clicked);
     void handleMouseClick(int x, int y);
-
+    void setTexture(SDL_Texture* texture);
+    void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
 
 private:
