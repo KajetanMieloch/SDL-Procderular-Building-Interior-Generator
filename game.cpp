@@ -133,7 +133,7 @@ void Game::update() {
 
 void Game::render() {
     // Set the background color to black
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     // Clear the screen
     SDL_RenderClear(renderer);

@@ -1,5 +1,22 @@
 #include "grid.hpp"
 
+
+SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
+    SDL_Surface* surface = IMG_Load(filePath.c_str());
+    if (!surface) {
+        // Handle the error appropriately
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    if (!texture) {
+        // Handle the error appropriately
+    }
+
+    return texture;
+}
+
 Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
     this->renderer = renderer;
     this->tileSize = tileSize;
@@ -14,6 +31,9 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
             grid[i][j] = false;
         }
     }
+
+    clickedTexture = LoadTexture("src/bomb.png");
+    //unclickedTexture = LoadTexture("unclicked_texture.png");
 }
 
 Grid::~Grid() {
@@ -58,12 +78,13 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                     SDL_Rect rect = {(x - startX) * TILE_SIZE, (y - startY) * TILE_SIZE, TILE_SIZE, TILE_SIZE};
 
                     if (isTileClicked(x, y)) {
-                        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black for clicked tiles
+                        SDL_RenderCopy(renderer, clickedTexture, NULL, &rect);
                     } else {
                         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
+                        SDL_RenderFillRect(renderer, &rect);
                     }
 
-                    SDL_RenderFillRect(renderer, &rect);
+
                 }
             }
         }
