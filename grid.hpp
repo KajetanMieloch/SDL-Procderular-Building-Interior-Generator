@@ -11,11 +11,12 @@ public:
     ~Grid();
 
     static const int TILE_SIZE = 32; // Set the desired size of each tile
-    static const int GRID_SIZE = 250; // Set the desired size of the grid
+    static const int GRID_SIZE = 100; // Set the desired size of the grid
 
     bool isTileClicked(int x, int y);
     void setTileClicked(int x, int y, bool clicked);
     void handleMouseClick(int x, int y);
+    void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);

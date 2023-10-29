@@ -32,7 +32,7 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
         }
     }
 
-    clickedTexture = LoadTexture("src/bomb.png");
+    clickedTexture = LoadTexture("src/Red_Brick.png");
     //unclickedTexture = LoadTexture("unclicked_texture.png");
 }
 
@@ -88,4 +88,16 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                 }
             }
         }
+}
+
+void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h) {
+    //Use it without rect. Generate border of rectangle with is tile clicked
+    for (int i = 0; i < w; i++) {
+        setTileClicked(x + i, y, true);
+        setTileClicked(x + i, y + h - 1, true);
+    }
+    for (int i = 0; i < h; i++) {
+        setTileClicked(x, y + i, true);
+        setTileClicked(x + w - 1, y + i, true);
+    }
 }
