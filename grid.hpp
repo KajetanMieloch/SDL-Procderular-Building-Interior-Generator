@@ -3,7 +3,13 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
+#include <nlohmann/json.hpp>
+#include <fstream>
 #include <string>
+#include <sstream>
+#include <algorithm>
+
 
 class Grid {
 public:
@@ -15,12 +21,13 @@ public:
 
     void init();
     int witchTextureTileIs(int x, int y);
-    void setTileTexture(int x, int y, int clicked);
+    void setTileTexture(int x, int y, int id);
     void handleMouseClick(int x, int y);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
+    SDL_Texture* getTextureFromJson(int id);
     SDL_Texture* clickedTexture;
     SDL_Texture* wallTexture;
     SDL_Texture* unclickedTexture;
@@ -31,7 +38,7 @@ private:
     int tileSize;
     int gridSize;
     int visibleSize;
-    bool** grid;
+    int** grid;
 };
 
 #endif

@@ -28,15 +28,15 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
     this->visibleSize = 50; // Partially visible size
 
     // Initialize the grid with all tiles as white
-    grid = new bool*[gridSize];
+    grid = new int*[gridSize];
     for (int i = 0; i < gridSize; i++) {
-        grid[i] = new bool[gridSize];
+        grid[i] = new int[gridSize];
         for (int j = 0; j < gridSize; j++) {
-            grid[i][j] = false;
+            grid[i][j] = 0;
         }
     }
 
-    clickedTexture = LoadTexture("src/Red_Brick.png");
+    clickedTexture = LoadTexture("src/red_brick.png");
     //unclickedTexture = LoadTexture("unclicked_texture.png");
 }
 
@@ -54,7 +54,7 @@ void Grid::handleEvent(SDL_Event& e) {
         int y = e.button.y / tileSize;
 
         if (x >= 0 && x < visibleSize && y >= 0 && y < visibleSize) {
-            grid[x][y] = true;
+            setTileTexture(x, y, 2);
         }
     }
 }
@@ -63,14 +63,43 @@ int Grid::witchTextureTileIs(int x, int y) {
     return grid[x][y];
 }
 
-void Grid::setTileTexture(int x, int y, int clicked) {
-    grid[x][y] = clicked;
+void Grid::setTileTexture(int x, int y, int id) {
+    grid[x][y] = id;
+}
+
+
+SDL_Texture* Grid::getTextureFromJson(int id) {
+    std::ifstream file("textures.json");
+    nlohmann::json j;
+
+    if (!file.is_open()) {
+        std::cerr << "Failed to open texture.json" << std::endl;
+        return NULL; // Handle the error appropriately
+    }
+
+    file >> j;
+
+    if (j.find("textures") != j.end()) {
+        for (auto& texture : j["textures"]) {
+            if (texture.find("id") != texture.end()) {
+                if (texture["id"] == id) {
+                    if (texture.find("path") != texture.end()) {
+                        std::string path = texture["path"];
+                        return LoadTexture(path);
+                    }
+                }
+            }
+        }
+    }
+
+
+    return NULL; // Handle the error appropriately
 }
 
 void Grid::handleMouseClick(int x, int y) {
     if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
         // Mark the clicked tile
-        grid[x][y] = true;
+        setTileTexture(x, y, 2);
     }
 }
 
@@ -85,7 +114,11 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                     switch (witchTextureTileIs(x, y))
                     {
                     case 1:
-                        SDL_RenderCopy(renderer, clickedTexture, NULL, &rect);
+                        SDL_RenderCopy(renderer, getTextureFromJson(1), NULL, &rect);
+                        break;
+                    
+                    case 2:
+                        SDL_RenderCopy(renderer, getTextureFromJson(2), NULL, &rect);
                         break;
                     
                     default:
