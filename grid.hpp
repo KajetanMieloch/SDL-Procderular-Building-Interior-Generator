@@ -14,8 +14,8 @@ public:
     static const int GRID_SIZE = 100; // Set the desired size of the grid
 
     void init();
-    int isTileClicked(int x, int y);
-    void setTileClicked(int x, int y, int clicked);
+    int witchTextureTileIs(int x, int y);
+    void setTileTexture(int x, int y, int clicked);
     void handleMouseClick(int x, int y);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h);
     void setTexture(SDL_Texture* texture);
