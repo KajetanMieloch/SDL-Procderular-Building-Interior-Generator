@@ -1,6 +1,10 @@
 #include "grid.hpp"
 
 
+void Grid::init(){
+    
+}
+
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
     SDL_Surface* surface = IMG_Load(filePath.c_str());
     if (!surface) {
@@ -55,11 +59,11 @@ void Grid::handleEvent(SDL_Event& e) {
     }
 }
 
-bool Grid::isTileClicked(int x, int y) {
+int Grid::isTileClicked(int x, int y) {
     return grid[x][y];
 }
 
-void Grid::setTileClicked(int x, int y, bool clicked) {
+void Grid::setTileClicked(int x, int y, int clicked) {
     grid[x][y] = clicked;
 }
 
@@ -77,7 +81,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                 if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
                     SDL_Rect rect = {(x - startX) * TILE_SIZE, (y - startY) * TILE_SIZE, TILE_SIZE, TILE_SIZE};
 
-                    if (isTileClicked(x, y)) {
+                    if (isTileClicked(x, y) == 1) {
                         SDL_RenderCopy(renderer, clickedTexture, NULL, &rect);
                     } else {
                         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
@@ -93,11 +97,11 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h) {
     //Use it without rect. Generate border of rectangle with is tile clicked
     for (int i = 0; i < w; i++) {
-        setTileClicked(x + i, y, true);
-        setTileClicked(x + i, y + h - 1, true);
+        setTileClicked(x + i, y, 1);
+        setTileClicked(x + i, y + h - 1, 1);
     }
     for (int i = 0; i < h; i++) {
-        setTileClicked(x, y + i, true);
-        setTileClicked(x + w - 1, y + i, true);
+        setTileClicked(x, y + i, 1);
+        setTileClicked(x + w - 1, y + i, 1);
     }
 }

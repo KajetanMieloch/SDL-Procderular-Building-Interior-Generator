@@ -13,14 +13,16 @@ public:
     static const int TILE_SIZE = 32; // Set the desired size of each tile
     static const int GRID_SIZE = 100; // Set the desired size of the grid
 
-    bool isTileClicked(int x, int y);
-    void setTileClicked(int x, int y, bool clicked);
+    void init();
+    int isTileClicked(int x, int y);
+    void setTileClicked(int x, int y, int clicked);
     void handleMouseClick(int x, int y);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
     SDL_Texture* clickedTexture;
+    SDL_Texture* wallTexture;
     SDL_Texture* unclickedTexture;
     SDL_Texture* LoadTexture(const std::string& filePath);
 
