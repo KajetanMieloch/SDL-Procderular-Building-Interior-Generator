@@ -78,20 +78,18 @@ SDL_Texture* Grid::getTextureFromJson(int id) {
     }
 
     file >> j;
+    std::cout << j << std::endl;
 
-    if (j.find("textures") != j.end()) {
-        for (auto& texture : j["textures"]) {
-            if (texture.find("id") != texture.end()) {
-                if (texture["id"] == id) {
-                    if (texture.find("path") != texture.end()) {
-                        std::string path = texture["path"];
-                        return LoadTexture(path);
-                    }
-                }
-            }
+    auto textures = j.find("textures");
+    if (textures != j.end()) {
+        auto texture = std::find_if(textures->begin(), textures->end(), [id](const auto& t) {
+            return t.find("id") != t.end() && t["id"] == id;
+        });
+
+        if (texture != textures->end() && texture->find("path") != texture->end()) {
+            return LoadTexture((*texture)["path"]);
         }
     }
-
 
     return NULL; // Handle the error appropriately
 }
@@ -114,10 +112,12 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                     switch (witchTextureTileIs(x, y))
                     {
                     case 1:
+                        std::cout << "1" << std::endl;
                         SDL_RenderCopy(renderer, getTextureFromJson(1), NULL, &rect);
                         break;
                     
                     case 2:
+                        std::cout << "2" << std::endl;
                         SDL_RenderCopy(renderer, getTextureFromJson(2), NULL, &rect);
                         break;
                     

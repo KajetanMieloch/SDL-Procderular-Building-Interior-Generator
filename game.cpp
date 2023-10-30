@@ -53,7 +53,14 @@ SDL_Renderer* Game::getRenderer() {
     return renderer;
 }
 
+bool rectangleGenerated = false;
+
 void Game::run() {
+    if (!rectangleGenerated) {
+        grid->generateRectangle(renderer, 5, 5, 10, 10);
+        rectangleGenerated = true;
+    }
+
     Uint64 lastFrameTime = SDL_GetPerformanceCounter();
     while (isRunning) {
         handleEvents(); // Call handleEvents() at the beginning of each frame
@@ -144,7 +151,7 @@ void Game::render() {
     int endX = startX + Grid::GRID_SIZE;
     int endY = startY + Grid::GRID_SIZE;
 
-    grid->generateRectangle(renderer, 5, 5, 10, 10);
+
     grid->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
 
     // Present the rendered frame
