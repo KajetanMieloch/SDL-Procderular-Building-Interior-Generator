@@ -5,8 +5,11 @@
 #include "grid.hpp"
 
 
+bool rectangleGenerated = false;
+
 Game::Game() {}
 Game::~Game() {}
+
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
     int flags = 0;
@@ -54,16 +57,14 @@ SDL_Renderer* Game::getRenderer() {
     return renderer;
 }
 
-bool rectangleGenerated = false;
+void Game::resetLevel() {
+    delete grid;
+    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
+    grid->init();
+    grid->generateLevel(renderer);
+}
 
 void Game::run() {
-    srand(static_cast<unsigned int>(time(nullptr)));
-
-    if (!rectangleGenerated) {
-        grid->generateRectangle(renderer, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1);
-        rectangleGenerated = true;
-    }
-
     Uint64 lastFrameTime = SDL_GetPerformanceCounter();
     while (isRunning) {
         handleEvents(); // Call handleEvents() at the beginning of each frame
@@ -131,6 +132,7 @@ void Game::handleEvents() {
 
             // Pass the adjusted mouse coordinates to the grid
             grid->handleMouseClick(adjustedX, adjustedY);
+            resetLevel();
             break;
         default:
             break;
@@ -142,6 +144,10 @@ void Game::update() {
 }
 
 void Game::render() {
+    if (!rectangleGenerated) {
+        grid->generateLevel(renderer);
+        rectangleGenerated = true;
+    }
     // Set the background color to black
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 

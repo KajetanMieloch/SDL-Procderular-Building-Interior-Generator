@@ -4,7 +4,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
 #include "grid.hpp"
 
 class Game {
@@ -32,6 +31,7 @@ public:
     void render();
     void clean();
     void run();
+    void resetLevel();
     bool getRunning() { return isRunning; }
     void setRunning(bool running) { isRunning = running; }
 };

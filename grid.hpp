@@ -4,6 +4,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <random>
+#include <ctime>
+
 
 class Grid {
 public:
@@ -17,10 +20,11 @@ public:
     int witchTextureTileIs(int x, int y);
     void setTileTexture(int x, int y, int id);
     void handleMouseClick(int x, int y);
-    void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h);
+    void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
+    void generateLevel(SDL_Renderer* renderer);
     SDL_Texture* LoadTexture(const std::string& filePath);
 
     SDL_Texture* redBrickTex;

@@ -101,11 +101,19 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
         }
 }
 
-void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h) {
+void Grid::generateLevel(SDL_Renderer* renderer) {
+
+    srand(static_cast<unsigned int>(time(nullptr)));
+    
+    generateRectangle(renderer, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, 1);
+
+}
+
+void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
     //Use it without rect. Generate rectangle with setTileTexture
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
-            setTileTexture(i, j, 1);
+            setTileTexture(i, j, id);
         }
     }
 }
