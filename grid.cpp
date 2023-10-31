@@ -103,9 +103,21 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
 
 void Grid::generateLevel(SDL_Renderer* renderer) {
 
-    srand(static_cast<unsigned int>(time(nullptr)));
-    
-    generateRectangle(renderer, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, 1);
+srand(static_cast<unsigned int>(time(nullptr)));
+
+// Create a random number generator engine
+std::mt19937 gen(rand());
+std::uniform_int_distribution<int> valueDistribution(5, 30);  // Distribution for values between 5 and 30
+std::uniform_int_distribution<int> binaryDistribution(1, 2);  // Distribution for values 1 or 2
+
+generateRectangle(
+    renderer,
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    binaryDistribution(gen)  // Generate a random value of 1 or 2
+);
 
 }
 
