@@ -44,6 +44,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     cameraY = 0;
 
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
+    grid->init();
 
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();

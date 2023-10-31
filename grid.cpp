@@ -2,7 +2,9 @@
 
 
 void Grid::init(){
-    
+    redBrickTex = LoadTexture("res/textures/red_brick.png");
+    blueBrickTex = LoadTexture("res/textures/blue_brick.png");
+    doorTex = LoadTexture("res/textures/door.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -35,9 +37,6 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
             grid[i][j] = 0;
         }
     }
-
-    clickedTexture = LoadTexture("src/red_brick.png");
-    //unclickedTexture = LoadTexture("unclicked_texture.png");
 }
 
 Grid::~Grid() {
@@ -68,32 +67,6 @@ void Grid::setTileTexture(int x, int y, int id) {
 }
 
 
-SDL_Texture* Grid::getTextureFromJson(int id) {
-    std::ifstream file("textures.json");
-    nlohmann::json j;
-
-    if (!file.is_open()) {
-        std::cerr << "Failed to open texture.json" << std::endl;
-        return NULL; // Handle the error appropriately
-    }
-
-    file >> j;
-    std::cout << j << std::endl;
-
-    auto textures = j.find("textures");
-    if (textures != j.end()) {
-        auto texture = std::find_if(textures->begin(), textures->end(), [id](const auto& t) {
-            return t.find("id") != t.end() && t["id"] == id;
-        });
-
-        if (texture != textures->end() && texture->find("path") != texture->end()) {
-            return LoadTexture((*texture)["path"]);
-        }
-    }
-
-    return NULL; // Handle the error appropriately
-}
-
 void Grid::handleMouseClick(int x, int y) {
     if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
         // Mark the clicked tile
@@ -112,13 +85,11 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                     switch (witchTextureTileIs(x, y))
                     {
                     case 1:
-                        std::cout << "1" << std::endl;
-                        SDL_RenderCopy(renderer, getTextureFromJson(1), NULL, &rect);
+                        SDL_RenderCopy(renderer, redBrickTex, NULL, &rect);
                         break;
                     
                     case 2:
-                        std::cout << "2" << std::endl;
-                        SDL_RenderCopy(renderer, getTextureFromJson(2), NULL, &rect);
+                        SDL_RenderCopy(renderer, blueBrickTex, NULL, &rect);
                         break;
                     
                     default:
