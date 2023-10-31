@@ -121,6 +121,12 @@ void Game::handleEvents() {
                     // Move the camera down
                     cameraY += Grid::TILE_SIZE;
                     break;
+                
+                //Reset the level CASE
+                case SDLK_r:
+                    resetLevel();
+                    break;
+
                 default:
                     break;
             }
@@ -132,7 +138,6 @@ void Game::handleEvents() {
 
             // Pass the adjusted mouse coordinates to the grid
             grid->handleMouseClick(adjustedX, adjustedY);
-            resetLevel();
             break;
         default:
             break;
