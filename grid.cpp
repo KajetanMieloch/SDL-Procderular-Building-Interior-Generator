@@ -4,7 +4,6 @@
 void Grid::init(){
     redBrickTex = LoadTexture("res/textures/red_brick.png");
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
-    doorTex = LoadTexture("res/textures/door.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -103,13 +102,10 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
 }
 
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h) {
-    //Use it without rect. Generate border of rectangle with is tile clicked
-    for (int i = 0; i < w; i++) {
-        setTileTexture(x + i, y, 1);
-        setTileTexture(x + i, y + h - 1, 1);
-    }
-    for (int i = 0; i < h; i++) {
-        setTileTexture(x, y + i, 1);
-        setTileTexture(x + w - 1, y + i, 1);
+    //Use it without rect. Generate rectangle with setTileTexture
+    for (int i = x; i < x + w; i++) {
+        for (int j = y; j < y + h; j++) {
+            setTileTexture(i, j, 1);
+        }
     }
 }

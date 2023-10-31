@@ -21,10 +21,10 @@ public:
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
+    SDL_Texture* LoadTexture(const std::string& filePath);
+
     SDL_Texture* redBrickTex;
     SDL_Texture* blueBrickTex;
-    SDL_Texture* doorTex;
-    SDL_Texture* LoadTexture(const std::string& filePath);
 
 private:
     SDL_Renderer* renderer;

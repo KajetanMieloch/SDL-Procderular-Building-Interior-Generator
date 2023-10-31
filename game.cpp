@@ -57,8 +57,10 @@ SDL_Renderer* Game::getRenderer() {
 bool rectangleGenerated = false;
 
 void Game::run() {
+    srand(static_cast<unsigned int>(time(nullptr)));
+
     if (!rectangleGenerated) {
-        grid->generateRectangle(renderer, 5, 5, 10, 10);
+        grid->generateRectangle(renderer, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1, rand() % 10 + 1);
         rectangleGenerated = true;
     }
 
