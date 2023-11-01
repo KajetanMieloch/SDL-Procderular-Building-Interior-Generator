@@ -5,6 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "grid.hpp"
+#include "hud.hpp"
 
 class Game {
 private:
@@ -12,6 +13,7 @@ private:
     SDL_Renderer* renderer;
     TTF_Font* font;
     Grid* grid;
+    HUD* hud;
     bool isRunning;
     SDL_Texture* start;
     const int FPS = 60;

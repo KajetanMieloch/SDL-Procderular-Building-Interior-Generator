@@ -3,7 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include "grid.hpp"
-
+#include "hud.hpp"
 
 bool rectangleGenerated = false;
 
@@ -49,6 +49,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
     grid->init();
 
+
+    //Initialize the HUD
+    hud = new HUD(renderer);
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();
 }
@@ -65,6 +68,7 @@ void Game::resetLevel() {
 }
 
 void Game::run() {
+
     Uint64 lastFrameTime = SDL_GetPerformanceCounter();
     while (isRunning) {
         handleEvents(); // Call handleEvents() at the beginning of each frame
@@ -121,7 +125,6 @@ void Game::handleEvents() {
                     // Move the camera down
                     cameraY += Grid::TILE_SIZE;
                     break;
-                
                 //Reset the level CASE
                 case SDLK_r:
                     resetLevel();
@@ -149,6 +152,7 @@ void Game::update() {
 }
 
 void Game::render() {
+
     if (!rectangleGenerated) {
         grid->generateLevel(renderer);
         rectangleGenerated = true;
@@ -168,7 +172,13 @@ void Game::render() {
 
     grid->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
 
-    // Present the rendered frame
+    int windowHeight;
+    SDL_GetWindowSize(window, NULL, &windowHeight);
+
+    // Render the HUD
+    hud->generateHUD();
+
+    // Don't forget to present the renderer
     SDL_RenderPresent(renderer);
 }
 
