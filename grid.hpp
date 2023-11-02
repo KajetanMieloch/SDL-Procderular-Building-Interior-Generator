@@ -24,7 +24,12 @@ public:
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
-    void generateLevel(SDL_Renderer* renderer);
+    void generateLayer(SDL_Renderer* renderer);
+
+    //2 Layer
+    void gridLayer2(SDL_Renderer* renderer, int tileSize, int gridSize);
+
+    //Textures
     SDL_Texture* LoadTexture(const std::string& filePath);
 
     SDL_Texture* redBrickTex;

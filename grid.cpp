@@ -101,7 +101,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
         }
 }
 
-void Grid::generateLevel(SDL_Renderer* renderer) {
+void Grid::generateLayer(SDL_Renderer* renderer) {
 
 srand(static_cast<unsigned int>(time(nullptr)));
 
@@ -126,6 +126,25 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
             setTileTexture(i, j, id);
+        }
+    }
+}
+
+
+
+//2 grid layer
+void Grid::gridLayer2(SDL_Renderer* renderer, int tileSize, int gridSize) {
+    this->renderer = renderer;
+    this->tileSize = tileSize;
+    this->gridSize = gridSize;
+    this->visibleSize = 50; // Partially visible size
+
+    // Initialize the grid with all tiles as white
+    grid = new int*[gridSize];
+    for (int i = 0; i < gridSize; i++) {
+        grid[i] = new int[gridSize];
+        for (int j = 0; j < gridSize; j++) {
+            grid[i][j] = 0;
         }
     }
 }

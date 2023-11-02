@@ -4,6 +4,7 @@
 #include <sstream>
 #include "grid.hpp"
 #include "hud.hpp"
+#include "equipment.hpp"
 
 bool rectangleGenerated = false;
 
@@ -47,11 +48,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     cameraY = 0;
 
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
+    grid2 = new Grid(renderer, Grid::TILE_SIZE/2, Grid::GRID_SIZE);
     grid->init();
+    grid2->init();
 
 
     //Initialize the HUD
     hud = new HUD(renderer);
+
+    //Initialize the equipment
+    equipment = new Equipment(renderer);
+
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();
 }
@@ -62,9 +69,13 @@ SDL_Renderer* Game::getRenderer() {
 
 void Game::resetLevel() {
     delete grid;
+    delete grid2;
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
+    grid2 = new Grid(renderer, Grid::TILE_SIZE/2, Grid::GRID_SIZE);
     grid->init();
-    grid->generateLevel(renderer);
+    grid2->init();
+    grid->generateLayer(renderer);
+    grid2->generateLayer(renderer);
 }
 
 void Game::run() {
@@ -129,7 +140,10 @@ void Game::handleEvents() {
                 case SDLK_r:
                     resetLevel();
                     break;
-
+                case SDLK_e:
+                    equipment->toggleEquipment();
+                    break;
+                
                 default:
                     break;
             }
@@ -154,7 +168,8 @@ void Game::update() {
 void Game::render() {
 
     if (!rectangleGenerated) {
-        grid->generateLevel(renderer);
+        grid->generateLayer(renderer);
+        grid2->generateLayer(renderer);
         rectangleGenerated = true;
     }
     // Set the background color to black
@@ -170,13 +185,18 @@ void Game::render() {
     int endY = startY + Grid::GRID_SIZE;
 
 
-    grid->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
+    grid2->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
 
     int windowHeight;
     SDL_GetWindowSize(window, NULL, &windowHeight);
 
     // Render the HUD
     hud->generateHUD();
+
+    // Render the equipment
+    if (equipment->isEquipmentOpen()) {
+        equipment->generateEquipment();
+    }
 
     // Don't forget to present the renderer
     SDL_RenderPresent(renderer);
