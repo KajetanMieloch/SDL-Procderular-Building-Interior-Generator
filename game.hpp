@@ -14,7 +14,6 @@ private:
     SDL_Renderer* renderer;
     TTF_Font* font;
     Grid* grid;
-    Grid* grid2;
     HUD* hud;
     Equipment* equipment;
     bool isRunning;

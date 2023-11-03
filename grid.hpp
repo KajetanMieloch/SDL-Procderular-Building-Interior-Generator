@@ -7,6 +7,21 @@
 #include <random>
 #include <ctime>
 
+class FirstLayer {
+public:
+    int** grid; // Similar to the first layer
+    // Add any other necessary methods and variables for this layer
+private:
+    // Add any necessary methods and variables for this layer
+};
+
+class SecondLayer {
+public:
+    int** grid; // Similar to the first layer
+    // Add any other necessary methods and variables for this layer
+private:
+    // Add any necessary methods and variables for this layer
+};
 
 class Grid {
 public:
@@ -17,26 +32,25 @@ public:
     static const int GRID_SIZE = 100; // Set the desired size of the grid
 
     void init();
-    int witchTextureTileIs(int x, int y);
-    void setTileTexture(int x, int y, int id);
+    int witchTextureTileIs(int x, int y, int layer);
+    void setTileTexture(int x, int y, int id, int layer);
     void handleMouseClick(int x, int y);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
-    void generateLayer(SDL_Renderer* renderer);
-
-    //2 Layer
-    void gridLayer2(SDL_Renderer* renderer, int tileSize, int gridSize);
-
-    //Textures
+    void generateLevel(SDL_Renderer* renderer);
     SDL_Texture* LoadTexture(const std::string& filePath);
 
     SDL_Texture* redBrickTex;
     SDL_Texture* blueBrickTex;
+    SDL_Texture* transparentTex;
+    SDL_Texture* bombTex;
 
 private:
     SDL_Renderer* renderer;
+    FirstLayer firstLayer;
+    SecondLayer secondLayer;
     int tileSize;
     int gridSize;
     int visibleSize;

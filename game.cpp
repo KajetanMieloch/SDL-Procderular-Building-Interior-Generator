@@ -48,9 +48,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     cameraY = 0;
 
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
-    grid2 = new Grid(renderer, Grid::TILE_SIZE/2, Grid::GRID_SIZE);
     grid->init();
-    grid2->init();
 
 
     //Initialize the HUD
@@ -69,13 +67,9 @@ SDL_Renderer* Game::getRenderer() {
 
 void Game::resetLevel() {
     delete grid;
-    delete grid2;
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
-    grid2 = new Grid(renderer, Grid::TILE_SIZE/2, Grid::GRID_SIZE);
     grid->init();
-    grid2->init();
-    grid->generateLayer(renderer);
-    grid2->generateLayer(renderer);
+    grid->generateLevel(renderer);
 }
 
 void Game::run() {
@@ -168,8 +162,7 @@ void Game::update() {
 void Game::render() {
 
     if (!rectangleGenerated) {
-        grid->generateLayer(renderer);
-        grid2->generateLayer(renderer);
+        grid->generateLevel(renderer);
         rectangleGenerated = true;
     }
     // Set the background color to black
@@ -185,7 +178,7 @@ void Game::render() {
     int endY = startY + Grid::GRID_SIZE;
 
 
-    grid2->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
+    grid->render(renderer, startX, startY, endX, endY, cameraX, cameraY);
 
     int windowHeight;
     SDL_GetWindowSize(window, NULL, &windowHeight);
