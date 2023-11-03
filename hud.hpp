@@ -7,7 +7,8 @@ class HUD {
 private:
     SDL_Renderer* renderer;
 public:
-    HUD(SDL_Renderer* renderer);
+    SDL_Window* window;
+    HUD(SDL_Renderer* renderer, SDL_Window* window);
     ~HUD();
     void init();
     void generateHUD();

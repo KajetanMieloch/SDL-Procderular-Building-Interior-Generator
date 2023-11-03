@@ -52,7 +52,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
     //Initialize the HUD
-    hud = new HUD(renderer);
+    hud = new HUD(renderer, window);
 
     //Initialize the equipment
     equipment = new Equipment(renderer);
