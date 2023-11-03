@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include "hud.hpp"
 
 class FirstLayer {
 public:
@@ -51,6 +52,7 @@ private:
     SDL_Renderer* renderer;
     FirstLayer firstLayer;
     SecondLayer secondLayer;
+    
     int tileSize;
     int gridSize;
     int visibleSize;

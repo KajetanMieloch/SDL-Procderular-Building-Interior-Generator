@@ -2,6 +2,8 @@
 
 
 void Grid::init(){
+
+    //Textures
     redBrickTex = LoadTexture("res/textures/red_brick.png");
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
     transparentTex = LoadTexture("res/textures/transparent.png");
@@ -110,7 +112,13 @@ void Grid::setTileTexture(int x, int y, int id, int layer) {
 
 
 void Grid::handleMouseClick(int x, int y) {
-    if (x >= 0 && x < GRID_SIZE && y >= 0 && y < GRID_SIZE) {
+    if (x >= 0 && 
+        x < GRID_SIZE &&
+        y >= 0 && 
+        y < GRID_SIZE
+    ){
+
+        std::cout << "Clicked on tile (" << x << ", " << y << ")" << std::endl;
         // Mark the clicked tile
         setTileTexture(x, y, 2, 1);
         setTileTexture(x, y, 1, 2);

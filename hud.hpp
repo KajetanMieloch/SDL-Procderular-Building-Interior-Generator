@@ -12,6 +12,8 @@ public:
     ~HUD();
     void init();
     void generateHUD();
+    int returnHudY();
+    int returnHudWidth();
 };
 
 #endif /* HUD_HPP */
