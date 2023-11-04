@@ -8,6 +8,9 @@ void Grid::init(){
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
     transparentTex = LoadTexture("res/textures/transparent.png");
     bombTex = LoadTexture("res/textures/bomb.png");
+
+    hud = new HUD(renderer, window);
+
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -135,34 +138,36 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                 if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
 
 
-                    // Render the first layer
-                    int firstLayerTile = witchTextureTileIs(x, y, 1);
-                    SDL_Rect firstLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
-                    switch (firstLayerTile) {
-                        case 1:
-                            SDL_RenderCopy(renderer, redBrickTex, NULL, &firstLayerRect);
-                            break;
-                        case 2:
-                            SDL_RenderCopy(renderer, blueBrickTex, NULL, &firstLayerRect);
-                            break;
-                        default:
-                            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
-                            SDL_RenderFillRect(renderer, &firstLayerRect);
-                            break;
-                    }
+                    if (hud.getChangeLayer() == 1 || hud.getChangeLayer() == 3) {
+                        // Render the first layer
+                        int firstLayerTile = witchTextureTileIs(x, y, 1);
+                        SDL_Rect firstLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
+                        switch (firstLayerTile) {
+                            case 1:
+                                SDL_RenderCopy(renderer, redBrickTex, NULL, &firstLayerRect);
+                                break;
+                            case 2:
+                                SDL_RenderCopy(renderer, blueBrickTex, NULL, &firstLayerRect);
+                                break;
+                            default:
+                                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
+                                SDL_RenderFillRect(renderer, &firstLayerRect);
+                                break;
+                    }}
 
-                    // Render the second layer
-                    int secondLayerTile = witchTextureTileIs(x, y, 2);
-                    SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
-                    switch (secondLayerTile) {
-                        case 1:
-                            SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
-                            break;
-                        default:
-                            SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
-                            break;
+                    if (hud.getChangeLayer() == 2 || hud.getChangeLayer() == 3) {
+                        // Render the second layer
+                        int secondLayerTile = witchTextureTileIs(x, y, 2);
+                        SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
+                        switch (secondLayerTile) {
+                            case 1:
+                                SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
+                                break;
+                            default:
+                                SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
+                                break;
+                        }
                     }
-
 
                 }
             }

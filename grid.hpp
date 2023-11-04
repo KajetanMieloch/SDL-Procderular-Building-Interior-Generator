@@ -52,7 +52,8 @@ private:
     SDL_Renderer* renderer;
     FirstLayer firstLayer;
     SecondLayer secondLayer;
-    
+    HUD* hud;
+    Window* window;
     int tileSize;
     int gridSize;
     int visibleSize;
