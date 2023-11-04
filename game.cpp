@@ -47,12 +47,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     cameraX = 0;
     cameraY = 0;
 
-    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
-    grid->init();
-
-
     //Initialize the HUD
     hud = new HUD(renderer, window);
+    hud->init();
+
+    //Initialize the grid
+    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE, hud);
+    grid->init();
 
     //Initialize the equipment
     equipment = new Equipment(renderer);
@@ -67,7 +68,7 @@ SDL_Renderer* Game::getRenderer() {
 
 void Game::resetLevel() {
     delete grid;
-    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE);
+    grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE, hud);
     grid->init();
     grid->generateLevel(renderer);
 }

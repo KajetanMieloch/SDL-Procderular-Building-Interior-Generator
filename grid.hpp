@@ -26,7 +26,7 @@ private:
 
 class Grid {
 public:
-    Grid(SDL_Renderer* renderer, int tileSize, int gridSize);
+    Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud);
     ~Grid();
 
     static const int TILE_SIZE = 32; // Set the desired size of each tile
@@ -53,7 +53,7 @@ private:
     FirstLayer firstLayer;
     SecondLayer secondLayer;
     HUD* hud;
-    Window* window;
+    SDL_Window* window;
     int tileSize;
     int gridSize;
     int visibleSize;

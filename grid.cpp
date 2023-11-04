@@ -8,9 +8,6 @@ void Grid::init(){
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
     transparentTex = LoadTexture("res/textures/transparent.png");
     bombTex = LoadTexture("res/textures/bomb.png");
-
-    hud = new HUD(renderer, window);
-
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -29,11 +26,12 @@ SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
     return texture;
 }
 
-Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize) {
+Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     this->renderer = renderer;
     this->tileSize = tileSize;
     this->gridSize = gridSize;
     this->visibleSize = 50; // Partially visible size
+    this->hud = hud;
 
     // Initialize the grid
     grid = new int*[gridSize];
@@ -126,6 +124,7 @@ void Grid::handleMouseClick(int x, int y) {
         mouseY < 1000
     ){
         // Mark the clicked tile
+        std::cout << hud->getRenderLayer() << std::endl;
         setTileTexture(x, y, 2, 1);
         setTileTexture(x, y, 1, 2);
     }
@@ -138,7 +137,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                 if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
 
 
-                    if (hud.getChangeLayer() == 1 || hud.getChangeLayer() == 3) {
+                    if (hud->getRenderLayer() == 1 || hud->getRenderLayer() == 3) {
                         // Render the first layer
                         int firstLayerTile = witchTextureTileIs(x, y, 1);
                         SDL_Rect firstLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
@@ -155,7 +154,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                                 break;
                     }}
 
-                    if (hud.getChangeLayer() == 2 || hud.getChangeLayer() == 3) {
+                    if (hud->getRenderLayer() == 2 || hud->getRenderLayer() == 3) {
                         // Render the second layer
                         int secondLayerTile = witchTextureTileIs(x, y, 2);
                         SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};

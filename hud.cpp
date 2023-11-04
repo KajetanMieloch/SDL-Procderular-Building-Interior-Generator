@@ -13,22 +13,22 @@ HUD::~HUD() {
 }
 
 void HUD::init() {
-    // Other initialization code...
+    // Initialization code...
 }
 
 void HUD::changeLayer(int layer, SDL_Surface*& textLayer) {
     if (layer == 1) {
         textRightPanel = "Displaying layer: 1";
         textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        renderLayer = 1;
+        setRenderLayer(1);
     } else if (layer == 2) {
         textRightPanel = "Displaying layer: 2";
         textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        renderLayer = 2;
+        setRenderLayer(2);
     } else if (layer == 3) {
         textRightPanel = "Displaying layer: All Layers";
         textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        renderLayer = 3;
+        setRenderLayer(3);
     }
 }
 

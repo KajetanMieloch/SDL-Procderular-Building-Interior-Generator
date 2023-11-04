@@ -12,6 +12,7 @@ private:
     SDL_Renderer* renderer;
     TTF_Font* font;
     int renderLayer = 3;
+    std::string textRightPanel = "Displaying layer: All Layers";
 public:
     SDL_Window* window;
     HUD(SDL_Renderer* renderer, SDL_Window* window);
@@ -21,11 +22,8 @@ public:
     int returnHudY();
     int returnHudWidth();
     void changeLayer(int layer, SDL_Surface*& textLayer);
-
-    int getRenderLayer() const {
-        return renderLayer;
-    }
-
+    int getRenderLayer() { return renderLayer; }
+    void setRenderLayer(int layer) { renderLayer = layer;} 
 };
 
 #endif /* HUD_HPP */
