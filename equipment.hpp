@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <iostream>
+#include <string>
 
 class Equipment {
 private:
@@ -10,6 +12,7 @@ private:
     SDL_Window* window;
     bool equipmentOpen = false;
 
+    SDL_Texture* LoadTexture(const std::string& filePath);
 
     SDL_Texture* redBrickTex;
     SDL_Texture* blueBrickTex;

@@ -44,6 +44,7 @@ public:
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);
     void generateLevel(SDL_Renderer* renderer);
+    
     SDL_Texture* LoadTexture(const std::string& filePath);
 
     SDL_Texture* redBrickTex;

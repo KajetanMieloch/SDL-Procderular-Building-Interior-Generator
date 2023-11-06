@@ -11,7 +11,30 @@ Equipment::~Equipment() {
 }
 
 void Equipment::init() {
-    
+
+    //Textures
+    redBrickTex = LoadTexture("res/textures/red_brick.png");
+    blueBrickTex = LoadTexture("res/textures/blue_brick.png");
+    transparentTex = LoadTexture("res/textures/transparent.png");
+    bombTex = LoadTexture("res/textures/bomb.png");
+    wallTex = LoadTexture("res/textures/wall.png");
+    cornerTex = LoadTexture("res/textures/corner.png");
+}
+
+SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {
+    SDL_Surface* surface = IMG_Load(filePath.c_str());
+    if (!surface) {
+        // Handle the error appropriately
+    }
+
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
+
+    if (!texture) {
+        // Handle the error appropriately
+    }
+
+    return texture;
 }
 
 void Equipment::generateEquipment() {
@@ -49,14 +72,25 @@ void Equipment::generateEquipment() {
             cellRect.h = cellHeight;
             SDL_RenderDrawRect(renderer, &cellRect);
 
-            SDL_Rect innerRect;
-            innerRect.x = startX + j * cellWidth + 5;
-            innerRect.y = startY + i * cellHeight + 5;
-            innerRect.w = cellWidth - 10;
-            innerRect.h = cellHeight - 10;
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            SDL_RenderFillRect(renderer, &innerRect);
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            //For each cell, draw the appropriate texture
+            if (i == 0 && j == 0) {
+                SDL_RenderCopy(renderer, redBrickTex, NULL, &cellRect);
+            }
+            else if (i == 0 && j == 1) {
+                SDL_RenderCopy(renderer, blueBrickTex, NULL, &cellRect);
+            }
+            else if (i == 0 && j == 2) {
+                SDL_RenderCopy(renderer, transparentTex, NULL, &cellRect);
+            }
+            else if (i == 0 && j == 3) {
+                SDL_RenderCopy(renderer, bombTex, NULL, &cellRect);
+            }
+            else if (i == 0 && j == 4) {
+                SDL_RenderCopy(renderer, wallTex, NULL, &cellRect);
+            }
+            else if (i == 0 && j == 5) {
+                SDL_RenderCopy(renderer, cornerTex, NULL, &cellRect);
+            }
         }
     }
     
