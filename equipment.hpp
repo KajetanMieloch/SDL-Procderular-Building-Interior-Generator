@@ -2,12 +2,22 @@
 #define EQUIPMENT_HPP
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 class Equipment {
 private:
     SDL_Renderer* renderer;
     SDL_Window* window;
     bool equipmentOpen = false;
+
+
+    SDL_Texture* redBrickTex;
+    SDL_Texture* blueBrickTex;
+    SDL_Texture* transparentTex;
+    SDL_Texture* bombTex;
+    SDL_Texture* wallTex;
+    SDL_Texture* cornerTex;
+
 public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);
     ~Equipment();

@@ -51,12 +51,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     hud = new HUD(renderer, window);
     hud->init();
 
+    //Initialize the equipment
+    equipment = new Equipment(renderer, window);
+    equipment->init();
+
     //Initialize the grid
     grid = new Grid(renderer, Grid::TILE_SIZE, Grid::GRID_SIZE, hud);
     grid->init();
 
-    //Initialize the equipment
-    equipment = new Equipment(renderer, window);
 
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();
@@ -149,7 +151,8 @@ void Game::handleEvents() {
             adjustedY = (event.button.y + cameraY) / Grid::TILE_SIZE;
 
             // Pass the adjusted mouse coordinates to the grid
-            grid->handleMouseClick(adjustedX, adjustedY);
+            if(!equipment->isEquipmentOpen())
+                grid->handleMouseClick(adjustedX, adjustedY);
             break;
         default:
             break;

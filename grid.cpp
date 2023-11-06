@@ -151,7 +151,7 @@ void Grid::handleMouseClick(int x, int y) {
         // Mark the clicked tile
         std::cout << hud->getRenderLayer() << std::endl;
         setTileTextureAndRotation(x, y, 2, 1);
-        setTileTextureAndRotation(x, y, 1, 2);
+        setTileTextureAndRotation(x, y, 101, 2);
     }
 }
 
@@ -185,13 +185,13 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                         int secondLayerRotation = getTileRotation(x, y, 2);
                         SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (secondLayerTile) {
-                            case 1:
+                            case 101:
                                 SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
                                 break;
-                            case 2:
+                            case 102:
                                 SDL_RenderCopyEx(renderer, cornerTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
-                            case 3:
+                            case 103:
                                 SDL_RenderCopyEx(renderer, wallTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             default:
@@ -234,24 +234,24 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
 
             //on boreders of rectangle
             if (i == x && j != y && j != y + h - 1) {
-                setTileTextureAndRotation(i, j, 3, 2, 0);
+                setTileTextureAndRotation(i, j, 103, 2, 0);
             } else if (i == x + w - 1 && j != y && j != y + h - 1) {
-                setTileTextureAndRotation(i, j, 3, 2, 0);
+                setTileTextureAndRotation(i, j, 103, 2, 0);
             } else if (j == y && i != x && i != x + w - 1) {
-                setTileTextureAndRotation(i, j, 3, 2, 90);
+                setTileTextureAndRotation(i, j, 103, 2, 90);
             } else if (j == y + h - 1 && i != x && i != x + w - 1) {
-                setTileTextureAndRotation(i, j, 3, 2, 90);
+                setTileTextureAndRotation(i, j, 103, 2, 90);
             }
 
             //on corners of rectangle
             if (i == x && j == y) {
-                setTileTextureAndRotation(i, j, 2, 2, 270);
+                setTileTextureAndRotation(i, j, 102, 2, 270);
             } else if (i == x + w - 1 && j == y) {
-                setTileTextureAndRotation(i, j, 2, 2, 0);
+                setTileTextureAndRotation(i, j, 102, 2, 0);
             } else if (i == x && j == y + h - 1) {
-                setTileTextureAndRotation(i, j, 2, 2, 180);
+                setTileTextureAndRotation(i, j, 102, 2, 180);
             } else if (i == x + w - 1 && j == y + h - 1) {
-                setTileTextureAndRotation(i, j, 2, 2, 90);
+                setTileTextureAndRotation(i, j, 102, 2, 90);
             }
         }
     }
