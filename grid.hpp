@@ -31,7 +31,7 @@ public:
     Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud);
     ~Grid();
 
-    static const int TILE_SIZE = 32; // Set the desired size of each tile
+    static const int TILE_SIZE = 64; // Set the desired size of each tile
     static const int GRID_SIZE = 100; // Set the desired size of the grid
 
     void init();
