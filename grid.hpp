@@ -10,7 +10,8 @@
 
 class FirstLayer {
 public:
-    int** grid; // Similar to the first layer
+    int** grid;
+    int** rotate;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -18,7 +19,8 @@ private:
 
 class SecondLayer {
 public:
-    int** grid; // Similar to the first layer
+    int** grid;
+    int** rotate;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -33,8 +35,9 @@ public:
     static const int GRID_SIZE = 100; // Set the desired size of the grid
 
     void init();
-    int witchTextureTileIs(int x, int y, int layer);
-    void setTileTexture(int x, int y, int id, int layer);
+    int getTileTexture(int x, int y, int layer);
+    int getTileRotation(int x, int y, int layer);
+    void setTileTextureAndRotation(int x, int y, int id, int layer, int rotate = 0);
     void handleMouseClick(int x, int y);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);

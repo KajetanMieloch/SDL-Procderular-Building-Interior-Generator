@@ -9,7 +9,7 @@ void Grid::init(){
     transparentTex = LoadTexture("res/textures/transparent.png");
     bombTex = LoadTexture("res/textures/bomb.png");
     wallTex = LoadTexture("res/textures/wall.png");
-    CornerTex = LoadTexture("res/textures/corner.png");
+    cornerTex = LoadTexture("res/textures/corner.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -44,21 +44,27 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
         }
     }
 
-    // Initialize first layer grid
+    // Initialize first layer grid and rotation
     firstLayer.grid = new int*[gridSize];
+    firstLayer.rotate = new int*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         firstLayer.grid[i] = new int[gridSize];
+        firstLayer.rotate[i] = new int[gridSize];
         for (int j = 0; j < gridSize; j++) {
             firstLayer.grid[i][j] = 0;
+            firstLayer.rotate[i][j] = 0;
         }
     }
 
-    // Initialize second layer grid
+    // Initialize second layer grid and rotation
     secondLayer.grid = new int*[gridSize];
+    secondLayer.rotate = new int*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         secondLayer.grid[i] = new int[gridSize];
+        secondLayer.rotate[i] = new int[gridSize];
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
+            secondLayer.rotate[i][j] = 0;
         }
     }
 
@@ -78,12 +84,13 @@ void Grid::handleEvent(SDL_Event& e) {
         int y = e.button.y / tileSize;
 
         if (x >= 0 && x < visibleSize && y >= 0 && y < visibleSize) {
-            setTileTexture(x, y, 2, 1);
+            setTileTextureAndRotation(x, y, 2, 1);
         }
     }
 }
 
-int Grid::witchTextureTileIs(int x, int y, int layer) {
+
+int Grid::getTileTexture(int x, int y, int layer) {
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch (layer) {
             case 1:
@@ -97,14 +104,30 @@ int Grid::witchTextureTileIs(int x, int y, int layer) {
     return 0;
 }
 
-void Grid::setTileTexture(int x, int y, int id, int layer) {
+int Grid::getTileRotation(int x, int y, int layer) {
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        switch (layer) {
+            case 1:
+                return firstLayer.rotate[x][y];
+            case 2:
+                return secondLayer.rotate[x][y];
+            default:
+                return 0;
+        }
+    }
+    return 0;
+}
+
+void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate) {
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch (layer) {
             case 1:
                 firstLayer.grid[x][y] = id;
+                firstLayer.rotate[x][y] = rotate;
                 break;
             case 2:
                 secondLayer.grid[x][y] = id;
+                secondLayer.rotate[x][y] = rotate;
                 break;
             default:
                 grid[x][y] = id;
@@ -127,8 +150,8 @@ void Grid::handleMouseClick(int x, int y) {
     ){
         // Mark the clicked tile
         std::cout << hud->getRenderLayer() << std::endl;
-        setTileTexture(x, y, 2, 1);
-        setTileTexture(x, y, 1, 2);
+        setTileTextureAndRotation(x, y, 2, 1);
+        setTileTextureAndRotation(x, y, 1, 2);
     }
 }
 
@@ -141,7 +164,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
 
                     if (hud->getRenderLayer() == 1 || hud->getRenderLayer() == 3) {
                         // Render the first layer
-                        int firstLayerTile = witchTextureTileIs(x, y, 1);
+                        int firstLayerTile = getTileTexture(x, y, 1);
                         SDL_Rect firstLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (firstLayerTile) {
                             case 1:
@@ -158,14 +181,18 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
 
                     if (hud->getRenderLayer() == 2 || hud->getRenderLayer() == 3) {
                         // Render the second layer
-                        int secondLayerTile = witchTextureTileIs(x, y, 2);
+                        int secondLayerTile = getTileTexture(x, y, 2);
+                        int secondLayerRotation = getTileRotation(x, y, 2);
                         SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (secondLayerTile) {
                             case 1:
                                 SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
                                 break;
                             case 2:
-                                SDL_RenderCopy(renderer, cornerTex, NULL, &secondLayerRect);
+                                SDL_RenderCopyEx(renderer, cornerTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 3:
+                                SDL_RenderCopyEx(renderer, wallTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
@@ -199,21 +226,32 @@ generateRectangle(
 }
 
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
-    //Generate rectangle with setTileTexture
+    //Generate rectangle with setTileTextureAndRotation
     for (int i = x; i < x + w; i++) {
-        //For corener tiles
         for (int j = y; j < y + h; j++) {
 
-            setTileTexture(i, j, id, 1);
+            setTileTextureAndRotation(i, j, id, 1);
 
+            //on boreders of rectangle
+            if (i == x && j != y && j != y + h - 1) {
+                setTileTextureAndRotation(i, j, 3, 2, 0);
+            } else if (i == x + w - 1 && j != y && j != y + h - 1) {
+                setTileTextureAndRotation(i, j, 3, 2, 0);
+            } else if (j == y && i != x && i != x + w - 1) {
+                setTileTextureAndRotation(i, j, 3, 2, 90);
+            } else if (j == y + h - 1 && i != x && i != x + w - 1) {
+                setTileTextureAndRotation(i, j, 3, 2, 90);
+            }
+
+            //on corners of rectangle
             if (i == x && j == y) {
-                setTileTexture(i, j, 2, 2);
+                setTileTextureAndRotation(i, j, 2, 2, 270);
             } else if (i == x + w - 1 && j == y) {
-                setTileTexture(i, j, 2, 2);
+                setTileTextureAndRotation(i, j, 2, 2, 0);
             } else if (i == x && j == y + h - 1) {
-                setTileTexture(i, j, 2, 2);
+                setTileTextureAndRotation(i, j, 2, 2, 180);
             } else if (i == x + w - 1 && j == y + h - 1) {
-                setTileTexture(i, j, 2, 2);
+                setTileTextureAndRotation(i, j, 2, 2, 90);
             }
         }
     }
