@@ -47,6 +47,8 @@ public:
     SDL_Texture* blueBrickTex;
     SDL_Texture* transparentTex;
     SDL_Texture* bombTex;
+    SDL_Texture* wallTex;
+    SDL_Texture* cornerTex;
 
 private:
     SDL_Renderer* renderer;

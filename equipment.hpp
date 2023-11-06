@@ -6,9 +6,10 @@
 class Equipment {
 private:
     SDL_Renderer* renderer;
-    bool equipmentOpen;
+    SDL_Window* window;
+    bool equipmentOpen = false;
 public:
-    Equipment(SDL_Renderer* renderer);
+    Equipment(SDL_Renderer* renderer, SDL_Window* window);
     ~Equipment();
     void init();
     void generateEquipment();

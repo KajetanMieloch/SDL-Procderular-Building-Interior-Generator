@@ -8,6 +8,8 @@ void Grid::init(){
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
     transparentTex = LoadTexture("res/textures/transparent.png");
     bombTex = LoadTexture("res/textures/bomb.png");
+    wallTex = LoadTexture("res/textures/wall.png");
+    CornerTex = LoadTexture("res/textures/corner.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -162,6 +164,9 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 1:
                                 SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
                                 break;
+                            case 2:
+                                SDL_RenderCopy(renderer, cornerTex, NULL, &secondLayerRect);
+                                break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
                                 break;
@@ -194,10 +199,22 @@ generateRectangle(
 }
 
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
-    //Use it without rect. Generate rectangle with setTileTexture
+    //Generate rectangle with setTileTexture
     for (int i = x; i < x + w; i++) {
+        //For corener tiles
         for (int j = y; j < y + h; j++) {
+
             setTileTexture(i, j, id, 1);
+
+            if (i == x && j == y) {
+                setTileTexture(i, j, 2, 2);
+            } else if (i == x + w - 1 && j == y) {
+                setTileTexture(i, j, 2, 2);
+            } else if (i == x && j == y + h - 1) {
+                setTileTexture(i, j, 2, 2);
+            } else if (i == x + w - 1 && j == y + h - 1) {
+                setTileTexture(i, j, 2, 2);
+            }
         }
     }
 }

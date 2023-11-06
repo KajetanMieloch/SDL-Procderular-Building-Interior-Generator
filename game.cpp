@@ -56,7 +56,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     grid->init();
 
     //Initialize the equipment
-    equipment = new Equipment(renderer);
+    equipment = new Equipment(renderer, window);
 
     // Initialize the last frame time to the current time
     lastFrameTime = SDL_GetPerformanceCounter();
