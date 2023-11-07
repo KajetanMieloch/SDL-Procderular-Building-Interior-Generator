@@ -25,9 +25,10 @@ public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);
     ~Equipment();
     void init();
-    void generateEquipment();
+    int generateEquipment();
     void toggleEquipment();
     bool isEquipmentOpen();
+    int returnClickedTile(int startX, int startY, int cellWidth, int cellHeight);
 };
 
 #endif /* EQUIPMENT_HPP */

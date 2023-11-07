@@ -37,7 +37,39 @@ SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {
     return texture;
 }
 
-void Equipment::generateEquipment() {
+int Equipment::returnClickedTile(int startX, int startY, int cellWidth, int cellHeight){
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_MOUSEBUTTONDOWN) {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+
+            // Calculate which cell is clicked
+            int clickedI = (y - startY) / cellHeight;
+            int clickedJ = (x - startX) / cellWidth;
+
+            // Return the texture ID based on the clicked cell
+            if (clickedI == 0 && clickedJ == 0) {
+                return 1;
+            }
+            else if (clickedI == 0 && clickedJ == 1) {
+                return 2;
+            }
+            else if (clickedI == 0 && clickedJ == 2) {
+                return 101;
+            }
+            else if (clickedI == 0 && clickedJ == 3) {
+                return 102;
+            }
+            else if (clickedI == 0 && clickedJ == 4) {
+                return 103;
+            }
+        }
+    }
+    return 0;
+}
+
+int Equipment::generateEquipment() {
     int windowHeight;
     int windowWidth;
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
@@ -80,20 +112,22 @@ void Equipment::generateEquipment() {
                 SDL_RenderCopy(renderer, blueBrickTex, NULL, &cellRect);
             }
             else if (i == 0 && j == 2) {
-                SDL_RenderCopy(renderer, transparentTex, NULL, &cellRect);
-            }
-            else if (i == 0 && j == 3) {
                 SDL_RenderCopy(renderer, bombTex, NULL, &cellRect);
             }
-            else if (i == 0 && j == 4) {
+            else if (i == 0 && j == 3) {
                 SDL_RenderCopy(renderer, wallTex, NULL, &cellRect);
             }
-            else if (i == 0 && j == 5) {
+            else if (i == 0 && j == 4) {
                 SDL_RenderCopy(renderer, cornerTex, NULL, &cellRect);
             }
         }
     }
-    
+    int clickedTile = returnClickedTile(startX, startY, cellWidth, cellHeight);
+    if(clickedTile != 0){
+        toggleEquipment();
+        return clickedTile;
+    }
+    return 0;
 }
 
 void Equipment::toggleEquipment() {

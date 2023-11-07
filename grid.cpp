@@ -149,7 +149,6 @@ void Grid::handleMouseClick(int x, int y) {
         mouseY < 1000
     ){
         // Mark the clicked tile
-        std::cout << hud->getRenderLayer() << std::endl;
         setTileTextureAndRotation(x, y, 2, 1);
         setTileTextureAndRotation(x, y, 101, 2);
     }
