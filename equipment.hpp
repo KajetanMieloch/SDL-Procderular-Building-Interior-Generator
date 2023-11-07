@@ -24,8 +24,9 @@ private:
 public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);
     ~Equipment();
+    int processClick(int mouseX, int mouseY);
     void init();
-    int generateEquipment();
+    void generateEquipment();
     void toggleEquipment();
     bool isEquipmentOpen();
     int returnClickedTile(int startX, int startY, int cellWidth, int cellHeight);

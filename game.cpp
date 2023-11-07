@@ -150,9 +150,15 @@ void Game::handleEvents() {
             adjustedX = (event.button.x + cameraX) / Grid::TILE_SIZE;
             adjustedY = (event.button.y + cameraY) / Grid::TILE_SIZE;
 
+            // Pass the raw mouse coordinates to the equipment close it and break case
+            if(equipment->processClick(event.button.x, event.button.y))
+                equipment->toggleEquipment();
+                break;
+
             // Pass the adjusted mouse coordinates to the grid
             if(!equipment->isEquipmentOpen())
                 grid->handleMouseClick(adjustedX, adjustedY);
+
             break;
         default:
             break;

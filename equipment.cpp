@@ -37,39 +37,42 @@ SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {
     return texture;
 }
 
-int Equipment::returnClickedTile(int startX, int startY, int cellWidth, int cellHeight){
-    SDL_Event e;
-    while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_MOUSEBUTTONDOWN) {
-            int x, y;
-            SDL_GetMouseState(&x, &y);
+int Equipment::processClick(int mouseX, int mouseY){
+    int windowHeight;
+    int windowWidth;
+    SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+    int cellWidth = 50;
+    int cellHeight = 50;
+    int gridWidth = 10;
+    int gridHeight = 10;
+    int startX = (windowWidth - gridWidth * cellWidth) / 2;
+    int startY = (windowHeight - gridHeight * cellHeight) / 2;
 
-            // Calculate which cell is clicked
-            int clickedI = (y - startY) / cellHeight;
-            int clickedJ = (x - startX) / cellWidth;
+    int clickedI = (mouseY - startY) / cellHeight;
+    int clickedJ = (mouseX - startX) / cellWidth;
 
-            // Return the texture ID based on the clicked cell
-            if (clickedI == 0 && clickedJ == 0) {
-                return 1;
-            }
-            else if (clickedI == 0 && clickedJ == 1) {
-                return 2;
-            }
-            else if (clickedI == 0 && clickedJ == 2) {
-                return 101;
-            }
-            else if (clickedI == 0 && clickedJ == 3) {
-                return 102;
-            }
-            else if (clickedI == 0 && clickedJ == 4) {
-                return 103;
-            }
-        }
+    // Return the texture ID based on the clicked cell
+    if (clickedI == 0 && clickedJ == 0) {
+        return 1;
     }
-    return 0;
+    else if (clickedI == 0 && clickedJ == 1) {
+        return 2;
+    }
+    else if (clickedI == 0 && clickedJ == 2) {
+        return 101;
+    }
+    else if (clickedI == 0 && clickedJ == 3) {
+        return 102;
+    }
+    else if (clickedI == 0 && clickedJ == 4) {
+        return 103;
+    }
+    else {
+        return 0;
+    }
 }
 
-int Equipment::generateEquipment() {
+void Equipment::generateEquipment() {
     int windowHeight;
     int windowWidth;
     SDL_GetWindowSize(window, &windowWidth, &windowHeight);
@@ -122,12 +125,6 @@ int Equipment::generateEquipment() {
             }
         }
     }
-    int clickedTile = returnClickedTile(startX, startY, cellWidth, cellHeight);
-    if(clickedTile != 0){
-        toggleEquipment();
-        return clickedTile;
-    }
-    return 0;
 }
 
 void Equipment::toggleEquipment() {
