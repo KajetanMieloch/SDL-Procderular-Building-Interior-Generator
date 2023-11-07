@@ -47,6 +47,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
     cameraX = 0;
     cameraY = 0;
 
+    int activeId = 0;
     //Initialize the HUD
     hud = new HUD(renderer, window);
     hud->init();
@@ -140,7 +141,13 @@ void Game::handleEvents() {
                 case SDLK_e:
                     equipment->toggleEquipment();
                     break;
-                
+                case SDLK_f:
+                if (activeRotation == 270)
+                    activeRotation = 0;
+                else{
+                    activeRotation += 90;
+                    break;
+                }
                 default:
                     break;
             }
@@ -151,14 +158,16 @@ void Game::handleEvents() {
             adjustedY = (event.button.y + cameraY) / Grid::TILE_SIZE;
 
             // Pass the raw mouse coordinates to the equipment close it and break case
-            if(equipment->processClick(event.button.x, event.button.y))
-                equipment->toggleEquipment();
-                break;
-
+            if(equipment->isEquipmentOpen()){
+                activeId = equipment->processClick(event.button.x, event.button.y);
+                if(activeId != -1){
+                    equipment->toggleEquipment();
+                    break;
+                }
+            }
             // Pass the adjusted mouse coordinates to the grid
             if(!equipment->isEquipmentOpen())
-                grid->handleMouseClick(adjustedX, adjustedY);
-
+                grid->handleMouseClick(adjustedX, adjustedY, activeId, activeRotation);
             break;
         default:
             break;

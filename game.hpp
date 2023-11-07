@@ -23,6 +23,8 @@ private:
     Uint64 lastFrameTime;
     int cameraX;
     int cameraY;
+    int activeId;
+    int activeRotation = 0;
 
 public:
     Game();

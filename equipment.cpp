@@ -52,23 +52,28 @@ int Equipment::processClick(int mouseX, int mouseY){
     int clickedJ = (mouseX - startX) / cellWidth;
 
     // Return the texture ID based on the clicked cell
-    if (clickedI == 0 && clickedJ == 0) {
-        return 1;
-    }
-    else if (clickedI == 0 && clickedJ == 1) {
-        return 2;
-    }
-    else if (clickedI == 0 && clickedJ == 2) {
-        return 101;
-    }
-    else if (clickedI == 0 && clickedJ == 3) {
-        return 102;
-    }
-    else if (clickedI == 0 && clickedJ == 4) {
-        return 103;
+    if (clickedI == 0) {
+        switch (clickedJ) {
+            case 0:
+                return 0;
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 100;
+            case 4:
+                return 101;
+            case 5:
+                return 102;
+            case 6:
+                return 103;
+            default:
+                return -1;
+        }
     }
     else {
-        return 0;
+        return -1;
     }
 }
 
@@ -108,20 +113,34 @@ void Equipment::generateEquipment() {
             SDL_RenderDrawRect(renderer, &cellRect);
 
             //For each cell, draw the appropriate texture
-            if (i == 0 && j == 0) {
-                SDL_RenderCopy(renderer, redBrickTex, NULL, &cellRect);
-            }
-            else if (i == 0 && j == 1) {
-                SDL_RenderCopy(renderer, blueBrickTex, NULL, &cellRect);
-            }
-            else if (i == 0 && j == 2) {
-                SDL_RenderCopy(renderer, bombTex, NULL, &cellRect);
-            }
-            else if (i == 0 && j == 3) {
-                SDL_RenderCopy(renderer, wallTex, NULL, &cellRect);
-            }
-            else if (i == 0 && j == 4) {
-                SDL_RenderCopy(renderer, cornerTex, NULL, &cellRect);
+            if (i == 0) {
+                switch (j) {
+                    case 0:
+                        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
+                        SDL_RenderFillRect(renderer, &cellRect);
+                        break;
+                    case 1:
+                        SDL_RenderCopy(renderer, redBrickTex, NULL, &cellRect);
+                        break;
+                    case 2:
+                        SDL_RenderCopy(renderer, blueBrickTex, NULL, &cellRect);
+                        break;
+                    case 3:
+                        SDL_RenderCopy(renderer, transparentTex, NULL, &cellRect);
+                        break;
+                    case 4:
+                        SDL_RenderCopy(renderer, bombTex, NULL, &cellRect);
+                        break;
+                    case 5:
+                        SDL_RenderCopy(renderer, cornerTex, NULL, &cellRect);
+                        break;
+                    case 6:
+                        SDL_RenderCopy(renderer, wallTex, NULL, &cellRect);
+                        break;
+                    default:
+                        // Handle other cases, if necessary
+                        break;
+                }
             }
         }
     }

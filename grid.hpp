@@ -38,7 +38,7 @@ public:
     int getTileTexture(int x, int y, int layer);
     int getTileRotation(int x, int y, int layer);
     void setTileTextureAndRotation(int x, int y, int id, int layer, int rotate = 0);
-    void handleMouseClick(int x, int y);
+    void handleMouseClick(int x, int y, int id, int rotate = 0);
     void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);

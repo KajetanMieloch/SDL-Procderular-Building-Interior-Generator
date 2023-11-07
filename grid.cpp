@@ -136,7 +136,7 @@ void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate
     }
 }
 
-void Grid::handleMouseClick(int x, int y) {
+void Grid::handleMouseClick(int x, int y, int id, int rotate) {
 
     int mouseY;
     SDL_GetMouseState(NULL, &mouseY);
@@ -148,9 +148,13 @@ void Grid::handleMouseClick(int x, int y) {
         y < GRID_SIZE &&
         mouseY < 1000
     ){
-        // Mark the clicked tile
-        setTileTextureAndRotation(x, y, 2, 1);
-        setTileTextureAndRotation(x, y, 101, 2);
+
+
+        if(id < 100){
+            setTileTextureAndRotation(x,y,id,1, rotate);
+        }else if (id >= 100){
+            setTileTextureAndRotation(x,y,id,2, rotate);
+        }
     }
 }
 
@@ -164,13 +168,14 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                     if (hud->getRenderLayer() == 1 || hud->getRenderLayer() == 3) {
                         // Render the first layer
                         int firstLayerTile = getTileTexture(x, y, 1);
+                        int firstLayerRotation = getTileRotation(x, y, 1);
                         SDL_Rect firstLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (firstLayerTile) {
                             case 1:
-                                SDL_RenderCopy(renderer, redBrickTex, NULL, &firstLayerRect);
+                                SDL_RenderCopyEx(renderer, redBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             case 2:
-                                SDL_RenderCopy(renderer, blueBrickTex, NULL, &firstLayerRect);
+                                SDL_RenderCopyEx(renderer, blueBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             default:
                                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
@@ -185,7 +190,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                         SDL_Rect secondLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (secondLayerTile) {
                             case 101:
-                                SDL_RenderCopy(renderer, bombTex, NULL, &secondLayerRect);
+                                SDL_RenderCopyEx(renderer, bombTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             case 102:
                                 SDL_RenderCopyEx(renderer, cornerTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
