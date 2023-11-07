@@ -31,8 +31,8 @@ public:
     Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud);
     ~Grid();
 
-    static const int TILE_SIZE = 64; // Set the desired size of each tile
-    static const int GRID_SIZE = 100; // Set the desired size of the grid
+    static const int TILE_SIZE = 36; // Set the desired size of each tile
+    static const int GRID_SIZE = 52; // Set the desired size of the grid
 
     void init();
     int getTileTexture(int x, int y, int layer);
@@ -53,6 +53,7 @@ public:
     SDL_Texture* bombTex;
     SDL_Texture* wallTex;
     SDL_Texture* cornerTex;
+    SDL_Texture* doorTex;
 
 private:
     SDL_Renderer* renderer;

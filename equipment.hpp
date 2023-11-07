@@ -20,6 +20,7 @@ private:
     SDL_Texture* bombTex;
     SDL_Texture* wallTex;
     SDL_Texture* cornerTex;
+    SDL_Texture* doorTex;
 
 public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);

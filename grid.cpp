@@ -10,6 +10,7 @@ void Grid::init(){
     bombTex = LoadTexture("res/textures/bomb.png");
     wallTex = LoadTexture("res/textures/wall.png");
     cornerTex = LoadTexture("res/textures/corner.png");
+    doorTex = LoadTexture("res/textures/door.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -198,6 +199,9 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 103:
                                 SDL_RenderCopyEx(renderer, wallTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
+                            case 104:
+                                SDL_RenderCopyEx(renderer, doorTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
                                 break;
@@ -268,7 +272,7 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
         }
     }
 
-    //randomly place hole in wall
+    //randomly get one coordinate of wall
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, tiles.size() - 1);
@@ -276,6 +280,26 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
     int random_index = distrib(gen);
 
     const auto& element = tiles[random_index];
-    setTileTextureAndRotation(element.first, element.second, 100, 2, 0);
-    
+
+    //For evry tile next to the randomly selected coordinate, check if it is a wall
+    //If it is a wall, get the rotation of the wall
+    for(int i = 0; i < tiles.size(); i++){
+        if(tiles[i].first == element.first && tiles[i].second == element.second - 1){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
+            }
+        }else if(tiles[i].first == element.first && tiles[i].second == element.second + 1){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
+            }
+        }else if(tiles[i].first == element.first - 1 && tiles[i].second == element.second){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
+            }
+        }else if(tiles[i].first == element.first + 1 && tiles[i].second == element.second){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
+            }
+        }
+    }
 }
