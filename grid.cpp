@@ -229,8 +229,12 @@ generateRectangle(
 
 }
 
+
+//Room generator
+
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
     //Generate rectangle with setTileTextureAndRotation
+    std::vector<std::pair<int, int>> tiles;
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
 
@@ -239,12 +243,16 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
             //on boreders of rectangle
             if (i == x && j != y && j != y + h - 1) {
                 setTileTextureAndRotation(i, j, 103, 2, 0);
+                tiles.push_back(std::make_pair(i, j));
             } else if (i == x + w - 1 && j != y && j != y + h - 1) {
                 setTileTextureAndRotation(i, j, 103, 2, 0);
+                tiles.push_back(std::make_pair(i, j));
             } else if (j == y && i != x && i != x + w - 1) {
                 setTileTextureAndRotation(i, j, 103, 2, 90);
+                tiles.push_back(std::make_pair(i, j));
             } else if (j == y + h - 1 && i != x && i != x + w - 1) {
                 setTileTextureAndRotation(i, j, 103, 2, 90);
+                tiles.push_back(std::make_pair(i, j));
             }
 
             //on corners of rectangle
@@ -259,4 +267,15 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
             }
         }
     }
+
+    //randomly place hole in wall
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, tiles.size() - 1);
+
+    int random_index = distrib(gen);
+
+    const auto& element = tiles[random_index];
+    setTileTextureAndRotation(element.first, element.second, 100, 2, 0);
+    
 }
