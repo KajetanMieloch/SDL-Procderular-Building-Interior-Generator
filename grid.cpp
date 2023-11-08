@@ -4,13 +4,41 @@
 void Grid::init(){
 
     //Textures
-    redBrickTex = LoadTexture("res/textures/red_brick.png");
+    bed2Tex = LoadTexture("res/textures/bed2.png");
+    bedTex = LoadTexture("res/textures/bed.png");
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
-    transparentTex = LoadTexture("res/textures/transparent.png");
     bombTex = LoadTexture("res/textures/bomb.png");
-    wallTex = LoadTexture("res/textures/wall.png");
+    chair2Tex = LoadTexture("res/textures/chair2.png");
+    chairTex = LoadTexture("res/textures/chair.png");
     cornerTex = LoadTexture("res/textures/corner.png");
     doorTex = LoadTexture("res/textures/door.png");
+    electricStoveTex = LoadTexture("res/textures/electric_stove.png");
+    fridgeClosedTex = LoadTexture("res/textures/fridge_closed.png");
+    fridgeOpenTex = LoadTexture("res/textures/fridge_open.png");
+    gasStoveOnTex = LoadTexture("res/textures/gas_stove_on.png");
+    gasStoveTex = LoadTexture("res/textures/gas_stove.png");
+    meteoriteBrickTex = LoadTexture("res/textures/meteorite_brick.png");
+    pearlstoneBrickTex = LoadTexture("res/textures/pearlstone_brick.png");
+    plateDirtyMuchTex = LoadTexture("res/textures/plate_dirty_much.png");
+    plateDirtyTex = LoadTexture("res/textures/plate_dirty.png");
+    plateMeatTex = LoadTexture("res/textures/plate_meat.png");
+    platePotatoTex = LoadTexture("res/textures/plate_potato.png");
+    plateTomatoLowTex = LoadTexture("res/textures/plate_tomato_low.png");
+    plateTomatoTex = LoadTexture("res/textures/plate_tomato.png");
+    plateTex = LoadTexture("res/textures/plate.png");
+    platinumBrickTex = LoadTexture("res/textures/platinum_brick.png");
+    potBoilingTex = LoadTexture("res/textures/pot_boiling.png");
+    potTomatoTex = LoadTexture("res/textures/pot_tomato.png");
+    potTex = LoadTexture("res/textures/pot.png");
+    potWaterTex = LoadTexture("res/textures/pot_water.png");
+    redBrickTex = LoadTexture("res/textures/red_brick.png");
+    sinkDirtyTex = LoadTexture("res/textures/sink_dirty.png");
+    sinkTex = LoadTexture("res/textures/sink.png");
+    snowBrickTex = LoadTexture("res/textures/snow_brick.png");
+    tableTex = LoadTexture("res/textures/table.png");
+    tableWhiteTex = LoadTexture("res/textures/table_white.png");
+    transparentTex = LoadTexture("res/textures/transparent.png");
+    wallTex = LoadTexture("res/textures/wall.png");
     windowTex = LoadTexture("res/textures/window.png");
 }
 
@@ -67,6 +95,18 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
             secondLayer.rotate[i][j] = 0;
+        }
+    }
+
+    // Initialize third layer grid and rotation
+    thirdLayer.grid = new int*[gridSize];
+    thirdLayer.rotate = new int*[gridSize];
+    for (int i = 0; i < gridSize; i++) {
+        thirdLayer.grid[i] = new int[gridSize];
+        thirdLayer.rotate[i] = new int[gridSize];
+        for (int j = 0; j < gridSize; j++) {
+            thirdLayer.grid[i][j] = 0;
+            thirdLayer.rotate[i][j] = 0;
         }
     }
 
@@ -167,7 +207,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                 if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
 
 
-                    if (hud->getRenderLayer() == 1 || hud->getRenderLayer() == 3) {
+                    if (hud->getRenderLayer() == 1 || hud->getRenderLayer() == 4) {
                         // Render the first layer
                         int firstLayerTile = getTileTexture(x, y, 1);
                         int firstLayerRotation = getTileRotation(x, y, 1);
@@ -179,13 +219,25 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 2:
                                 SDL_RenderCopyEx(renderer, blueBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
+                            case 3:
+                                SDL_RenderCopyEx(renderer, snowBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 4:
+                                SDL_RenderCopyEx(renderer, meteoriteBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 5:
+                                SDL_RenderCopyEx(renderer, pearlstoneBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 6:
+                                SDL_RenderCopyEx(renderer, platinumBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
                             default:
                                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
                                 SDL_RenderFillRect(renderer, &firstLayerRect);
                                 break;
                     }}
 
-                    if (hud->getRenderLayer() == 2 || hud->getRenderLayer() == 3) {
+                    if (hud->getRenderLayer() == 2 || hud->getRenderLayer() == 4) {
                         // Render the second layer
                         int secondLayerTile = getTileTexture(x, y, 2);
                         int secondLayerRotation = getTileRotation(x, y, 2);
@@ -206,8 +258,91 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 105:
                                 SDL_RenderCopyEx(renderer, windowTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
+                            case 106:
+                                SDL_RenderCopyEx(renderer, tableTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 107:
+                                SDL_RenderCopyEx(renderer, tableWhiteTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 108:
+                                SDL_RenderCopyEx(renderer, chairTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 109:
+                                SDL_RenderCopyEx(renderer, chair2Tex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 110:
+                                SDL_RenderCopyEx(renderer, bedTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 111:
+                                SDL_RenderCopyEx(renderer, bed2Tex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 112:
+                                SDL_RenderCopyEx(renderer, sinkTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 113:
+                                SDL_RenderCopyEx(renderer, sinkDirtyTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 114:
+                                SDL_RenderCopyEx(renderer, tableWhiteTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 115:
+                                SDL_RenderCopyEx(renderer, electricStoveTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 116:
+                                SDL_RenderCopyEx(renderer, gasStoveTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 117:
+                                SDL_RenderCopyEx(renderer, gasStoveOnTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 118:
+                                SDL_RenderCopyEx(renderer, electricStoveTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
+                                break;
+                        }
+                    }
+                    if(hud->getRenderLayer() == 3 || hud->getRenderLayer() == 4){
+                        // Render the third layer
+                        int thirdLayerTile = getTileTexture(x, y, 3);
+                        int thirdLayerRotation = getTileRotation(x, y, 3);
+                        SDL_Rect thirdLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
+                        switch (thirdLayerTile) {
+                            case 201:
+                                SDL_RenderCopyEx(renderer, plateTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 202:
+                                SDL_RenderCopyEx(renderer, plateDirtyTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 203:
+                                SDL_RenderCopyEx(renderer, plateDirtyMuchTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 204:
+                                SDL_RenderCopyEx(renderer, plateMeatTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 205:
+                                SDL_RenderCopyEx(renderer, platePotatoTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 206:
+                                SDL_RenderCopyEx(renderer, plateTomatoTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 207:
+                                SDL_RenderCopyEx(renderer, plateTomatoLowTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 208:
+                                SDL_RenderCopyEx(renderer, potTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 209:
+                                SDL_RenderCopyEx(renderer, potBoilingTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 210:
+                                SDL_RenderCopyEx(renderer, potTomatoTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 211:
+                                SDL_RenderCopyEx(renderer, potWaterTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            default:
+                                SDL_RenderCopy(renderer, transparentTex, NULL, &thirdLayerRect);
                                 break;
                         }
                     }
@@ -223,7 +358,7 @@ srand(static_cast<unsigned int>(time(nullptr)));
 
 // Create a random number generator engine
 std::mt19937 gen(rand());
-std::uniform_int_distribution<int> valueDistribution(5, 30);  // Distribution for values between 5 and 30
+std::uniform_int_distribution<int> valueDistribution(5, 10);  // Distribution for values between 5 and 30
 std::uniform_int_distribution<int> binaryDistribution(1, 2);  // Distribution for values 1 or 2
 
 generateRectangle(
@@ -303,6 +438,10 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
         for (int j = y; j < y + h; j++) {
 
             setTileTextureAndRotation(i, j, id, 1);
+            //On random not taken tiles render all furniture
+            
+
+
 
             //on boreders of rectangle
             if (i == x && j != y && j != y + h - 1) {
@@ -337,39 +476,24 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, tiles.size() - 1);
 
-    int random_index = distrib(gen);
-
-    const auto& element = tiles[random_index];
+    //Shuffle tiles
+    std::shuffle(tiles.begin(), tiles.end(), std::mt19937{std::random_device{}()});
 
     //For evry tile next to the randomly selected coordinate, check if it is a wall
     //If it is a wall, get the rotation of the wall
     for(int i = 0; i < tiles.size(); i++){
-        if(tiles[i].first == element.first && tiles[i].second == element.second - 1){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
-            }
-        }else if(tiles[i].first == element.first && tiles[i].second == element.second + 1){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
-            }
-        }else if(tiles[i].first == element.first - 1 && tiles[i].second == element.second){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
-            }
-        }else if(tiles[i].first == element.first + 1 && tiles[i].second == element.second){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
-            }
+        if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+            int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
+            //Set the tile to a door
+            setTileTextureAndRotation(tiles[i].first, tiles[i].second, 104, 2, rotation);
+            tiles.erase(tiles.begin() + i);
+            break;
         }
     }
     //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
     //If it is a empty tile, get the rotation of the wall and set it to a window
-    //Generate a random number between 1 and 10 and place that many windows.
-    std::uniform_int_distribution<> distrib2(1, 10);
+    //Generate a random number between 2 and 4 and place that many windows.
+    std::uniform_int_distribution<> distrib2(2, 4);
     int window_count = distrib2(gen);
     for(int i = 0; i < window_count; i++){
         if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){

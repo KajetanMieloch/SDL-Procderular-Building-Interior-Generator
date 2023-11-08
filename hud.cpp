@@ -17,19 +17,29 @@ void HUD::init() {
 }
 
 void HUD::changeLayer(int layer, SDL_Surface*& textLayer) {
-    if (layer == 1) {
-        textRightPanel = "Displaying layer: 1";
-        textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        setRenderLayer(1);
-    } else if (layer == 2) {
-        textRightPanel = "Displaying layer: 2";
-        textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        setRenderLayer(2);
-    } else if (layer == 3) {
-        textRightPanel = "Displaying layer: All Layers";
-        textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
-        setRenderLayer(3);
+    switch (layer) {
+        case 1:
+            textRightPanel = "Displaying layer: 1";
+            setRenderLayer(1);
+            break;
+        case 2:
+            textRightPanel = "Displaying layer: 2";
+            setRenderLayer(2);
+            break;
+        case 3:
+            textRightPanel = "Displaying layer: 3";
+            setRenderLayer(3);
+            break;
+        case 4:
+            textRightPanel = "Displaying layer: All Layers";
+            setRenderLayer(4);
+            break;
+        default:
+            // Handle other cases if necessary
+            break;
     }
+
+    textLayer = TTF_RenderText_Solid(font, textRightPanel.c_str(), {255, 255, 255, 255});
 }
 
 void HUD::generateHUD() {
@@ -94,9 +104,24 @@ void HUD::generateHUD() {
     SDL_RenderCopy(renderer, textTexture2, NULL, &textRect2);
     SDL_FreeSurface(textSurface2);
 
+    //Button 4
+    SDL_Rect buttonRect4 = {230, hudY + 10, 100, 60};
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_RenderDrawRect(renderer, &buttonRect4);
+    SDL_Color textColor5 = {255, 255, 255, 255}; // White color
+    SDL_Surface* textSurface5 = TTF_RenderText_Solid(font, "3", textColor5);
+    SDL_Texture* textTexture5 = SDL_CreateTextureFromSurface(renderer, textSurface5);
+    SDL_Rect textRect5;
+    textRect5.x = buttonRect4.x + (buttonRect4.w - textSurface5->w) / 2; // Center the text horizontally
+    textRect5.y = buttonRect4.y + (buttonRect4.h - textSurface5->h) / 2; // Center the text vertically
+    textRect5.w = textSurface5->w;
+    textRect5.h = textSurface5->h;
+    SDL_RenderCopy(renderer, textTexture5, NULL, &textRect5);
+    SDL_FreeSurface(textSurface5);
+
     //Button 3
 
-    SDL_Rect buttonRect3 = {230, hudY + 10, 100, 60};
+    SDL_Rect buttonRect3 = {340, hudY + 10, 100, 60};
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderDrawRect(renderer, &buttonRect3);
     SDL_Color textColor3 = {255, 255, 255, 255}; // White color
@@ -139,18 +164,23 @@ void HUD::generateHUD() {
 
         if (mouseX >= buttonRect2.x && mouseX <= buttonRect2.x + buttonRect2.w &&
             mouseY >= buttonRect2.y && mouseY <= buttonRect2.y + buttonRect2.h) {
-            // Mouse is over buttonRect2
             SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
             SDL_RenderDrawRect(renderer, &buttonRect2);
             changeLayer(2, textLayer);
         }
 
+        if(mouseX >= buttonRect4.x && mouseX <= buttonRect4.x + buttonRect4.w &&
+            mouseY >= buttonRect4.y && mouseY <= buttonRect4.y + buttonRect4.h) {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+            SDL_RenderDrawRect(renderer, &buttonRect4);
+            changeLayer(3, textLayer);
+        }
+
         if (mouseX >= buttonRect3.x && mouseX <= buttonRect3.x + buttonRect3.w &&
             mouseY >= buttonRect3.y && mouseY <= buttonRect3.y + buttonRect3.h) {
-            // Mouse is over buttonRect3
             SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
             SDL_RenderDrawRect(renderer, &buttonRect3);
-            changeLayer(3, textLayer);
+            changeLayer(4, textLayer);
         }
     }
 

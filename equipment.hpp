@@ -14,13 +14,41 @@ private:
 
     SDL_Texture* LoadTexture(const std::string& filePath);
 
-    SDL_Texture* redBrickTex;
+    SDL_Texture* bed2Tex;
+    SDL_Texture* bedTex;
     SDL_Texture* blueBrickTex;
-    SDL_Texture* transparentTex;
     SDL_Texture* bombTex;
-    SDL_Texture* wallTex;
+    SDL_Texture* chair2Tex;
+    SDL_Texture* chairTex;
     SDL_Texture* cornerTex;
     SDL_Texture* doorTex;
+    SDL_Texture* electricStoveTex;
+    SDL_Texture* fridgeClosedTex;
+    SDL_Texture* fridgeOpenTex;
+    SDL_Texture* gasStoveOnTex;
+    SDL_Texture* gasStoveTex;
+    SDL_Texture* meteoriteBrickTex;
+    SDL_Texture* pearlstoneBrickTex;
+    SDL_Texture* plateDirtyMuchTex;
+    SDL_Texture* plateDirtyTex;
+    SDL_Texture* plateMeatTex;
+    SDL_Texture* platePotatoTex;
+    SDL_Texture* plateTomatoLowTex;
+    SDL_Texture* plateTomatoTex;
+    SDL_Texture* plateTex;
+    SDL_Texture* platinumBrickTex;
+    SDL_Texture* potBoilingTex;
+    SDL_Texture* potTomatoTex;
+    SDL_Texture* potTex;
+    SDL_Texture* potWaterTex;
+    SDL_Texture* redBrickTex;
+    SDL_Texture* sinkDirtyTex;
+    SDL_Texture* sinkTex;
+    SDL_Texture* snowBrickTex;
+    SDL_Texture* tableTex;
+    SDL_Texture* tableWhiteTex;
+    SDL_Texture* transparentTex;
+    SDL_Texture* wallTex;
     SDL_Texture* windowTex;
 
 public:

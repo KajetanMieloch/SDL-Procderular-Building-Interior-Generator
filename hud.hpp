@@ -11,7 +11,7 @@ class HUD {
 private:
     SDL_Renderer* renderer;
     TTF_Font* font;
-    int renderLayer = 3;
+    int renderLayer = 4;
     std::string textRightPanel = "Displaying layer: All Layers";
 public:
     SDL_Window* window;

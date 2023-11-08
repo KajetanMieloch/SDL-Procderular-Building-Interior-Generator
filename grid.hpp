@@ -7,6 +7,7 @@
 #include <random>
 #include <ctime>
 #include "hud.hpp"
+#include <algorithm>
 
 class FirstLayer {
 public:
@@ -26,12 +27,21 @@ private:
     // Add any necessary methods and variables for this layer
 };
 
+class ThirdLayer {
+public:
+    int** grid;
+    int** rotate;
+    // Add any other necessary methods and variables for this layer
+private:
+    // Add any necessary methods and variables for this layer
+};
+
 class Grid {
 public:
     Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud);
     ~Grid();
 
-    static const int TILE_SIZE = 36; // Set the desired size of each tile
+    static const int TILE_SIZE = 48; // Set the desired size of each tile
     static const int GRID_SIZE = 52; // Set the desired size of the grid
 
     void init();
@@ -49,19 +59,48 @@ public:
     
     SDL_Texture* LoadTexture(const std::string& filePath);
 
-    SDL_Texture* redBrickTex;
+    SDL_Texture* bed2Tex;
+    SDL_Texture* bedTex;
     SDL_Texture* blueBrickTex;
-    SDL_Texture* transparentTex;
     SDL_Texture* bombTex;
-    SDL_Texture* wallTex;
+    SDL_Texture* chair2Tex;
+    SDL_Texture* chairTex;
     SDL_Texture* cornerTex;
     SDL_Texture* doorTex;
+    SDL_Texture* electricStoveTex;
+    SDL_Texture* fridgeClosedTex;
+    SDL_Texture* fridgeOpenTex;
+    SDL_Texture* gasStoveOnTex;
+    SDL_Texture* gasStoveTex;
+    SDL_Texture* meteoriteBrickTex;
+    SDL_Texture* pearlstoneBrickTex;
+    SDL_Texture* plateDirtyMuchTex;
+    SDL_Texture* plateDirtyTex;
+    SDL_Texture* plateMeatTex;
+    SDL_Texture* platePotatoTex;
+    SDL_Texture* plateTomatoLowTex;
+    SDL_Texture* plateTomatoTex;
+    SDL_Texture* plateTex;
+    SDL_Texture* platinumBrickTex;
+    SDL_Texture* potBoilingTex;
+    SDL_Texture* potTomatoTex;
+    SDL_Texture* potTex;
+    SDL_Texture* potWaterTex;
+    SDL_Texture* redBrickTex;
+    SDL_Texture* sinkDirtyTex;
+    SDL_Texture* sinkTex;
+    SDL_Texture* snowBrickTex;
+    SDL_Texture* tableTex;
+    SDL_Texture* tableWhiteTex;
+    SDL_Texture* transparentTex;
+    SDL_Texture* wallTex;
     SDL_Texture* windowTex;
 
 private:
     SDL_Renderer* renderer;
     FirstLayer firstLayer;
     SecondLayer secondLayer;
+    ThirdLayer thirdLayer;
     HUD* hud;
     SDL_Window* window;
     int tileSize;
