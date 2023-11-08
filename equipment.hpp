@@ -21,6 +21,7 @@ private:
     SDL_Texture* wallTex;
     SDL_Texture* cornerTex;
     SDL_Texture* doorTex;
+    SDL_Texture* windowTex;
 
 public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);

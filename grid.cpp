@@ -11,6 +11,7 @@ void Grid::init(){
     wallTex = LoadTexture("res/textures/wall.png");
     cornerTex = LoadTexture("res/textures/corner.png");
     doorTex = LoadTexture("res/textures/door.png");
+    windowTex = LoadTexture("res/textures/window.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -202,6 +203,9 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 104:
                                 SDL_RenderCopyEx(renderer, doorTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
+                            case 105:
+                                SDL_RenderCopyEx(renderer, windowTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
                                 break;
@@ -233,6 +237,34 @@ generateRectangle(
 
 }
 
+
+bool Grid::chceckBorderingTilesForId(int x, int y, int id, int layer){
+    for(int i = 0; i < 4; i++){
+        switch(i){
+            case 0:
+                if(getTileTexture(x, y - 1, layer) == id){
+                    return true;
+                }
+                break;
+            case 1:
+                if(getTileTexture(x, y + 1, layer) == id){
+                    return true;
+                }
+                break;
+            case 2:
+                if(getTileTexture(x - 1, y, layer) == id){
+                    return true;
+                }
+                break;
+            case 3:
+                if(getTileTexture(x + 1, y, layer) == id){
+                    return true;
+                }
+                break;
+        }
+    }
+    return false;
+}
 
 //Room generator
 
@@ -286,19 +318,48 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
     for(int i = 0; i < tiles.size(); i++){
         if(tiles[i].first == element.first && tiles[i].second == element.second - 1){
             if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
                 setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
             }
         }else if(tiles[i].first == element.first && tiles[i].second == element.second + 1){
             if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
                 setTileTextureAndRotation(element.first, element.second, 104, 2, 0);
             }
         }else if(tiles[i].first == element.first - 1 && tiles[i].second == element.second){
             if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
                 setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
             }
         }else if(tiles[i].first == element.first + 1 && tiles[i].second == element.second){
             if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
                 setTileTextureAndRotation(element.first, element.second, 104, 2, 90);
+            }
+        }
+    }
+    //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
+    //If it is a empty tile, get the rotation of the wall and set it to a window
+    for(int i = 0; i < tiles.size(); i++){
+        if(tiles[i].first == element.first && tiles[i].second == element.second - 1 && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
+                setTileTextureAndRotation(element.first, element.second, 105, 2, 0);
+            }
+        }else if(tiles[i].first == element.first && tiles[i].second == element.second + 1 && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
+                setTileTextureAndRotation(element.first, element.second, 105, 2, 0);
+            }
+        }else if(tiles[i].first == element.first - 1 && tiles[i].second == element.second && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
+                setTileTextureAndRotation(element.first, element.second, 105, 2, 90);
+            }
+        }else if(tiles[i].first == element.first + 1 && tiles[i].second == element.second && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
+            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+                tiles.erase(tiles.begin() + i);
+                setTileTextureAndRotation(element.first, element.second, 105, 2, 90);
             }
         }
     }

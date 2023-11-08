@@ -20,6 +20,7 @@ void Equipment::init() {
     wallTex = LoadTexture("res/textures/wall.png");
     cornerTex = LoadTexture("res/textures/corner.png");
     doorTex = LoadTexture("res/textures/door.png");
+    windowTex = LoadTexture("res/textures/window.png");
 }
 
 SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {
@@ -71,6 +72,8 @@ int Equipment::processClick(int mouseX, int mouseY){
                 return 103;
             case 7:
                 return 104;
+            case 8:
+                return 105;
             default:
                 return -1;
         }
@@ -142,6 +145,9 @@ void Equipment::generateEquipment() {
                         break;
                     case 7:
                         SDL_RenderCopy(renderer, doorTex, NULL, &cellRect);
+                        break;
+                    case 8:
+                        SDL_RenderCopy(renderer, windowTex, NULL, &cellRect);
                         break;
                     default:
                         // Handle other cases, if necessary
