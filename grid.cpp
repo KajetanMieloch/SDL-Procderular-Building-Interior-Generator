@@ -266,6 +266,34 @@ bool Grid::chceckBorderingTilesForId(int x, int y, int id, int layer){
     return false;
 }
 
+int Grid::getRotationOfBorderingTileWithId(int x, int y, int id, int layer){
+    for(int i = 0; i < 4; i++){
+        switch(i){
+            case 0:
+                if(getTileTexture(x, y - 1, layer) == id){
+                    return getTileRotation(x, y - 1, layer);
+                }
+                break;
+            case 1:
+                if(getTileTexture(x, y + 1, layer) == id){
+                    return getTileRotation(x, y + 1, layer);
+                }
+                break;
+            case 2:
+                if(getTileTexture(x - 1, y, layer) == id){
+                    return getTileRotation(x - 1, y, layer);
+                }
+                break;
+            case 3:
+                if(getTileTexture(x + 1, y, layer) == id){
+                    return getTileRotation(x + 1, y, layer);
+                }
+                break;
+        }
+    }
+    return 45;
+}
+
 //Room generator
 
 void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
@@ -340,27 +368,13 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
     }
     //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
     //If it is a empty tile, get the rotation of the wall and set it to a window
-    for(int i = 0; i < tiles.size(); i++){
-        if(tiles[i].first == element.first && tiles[i].second == element.second - 1 && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 105, 2, 0);
-            }
-        }else if(tiles[i].first == element.first && tiles[i].second == element.second + 1 && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 105, 2, 0);
-            }
-        }else if(tiles[i].first == element.first - 1 && tiles[i].second == element.second && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 105, 2, 90);
-            }
-        }else if(tiles[i].first == element.first + 1 && tiles[i].second == element.second && chceckBorderingTilesForId(tiles[i].first, tiles[i].second, 0, 1)){
-            if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
-                tiles.erase(tiles.begin() + i);
-                setTileTextureAndRotation(element.first, element.second, 105, 2, 90);
-            }
+    //Generate a random number between 1 and 10 and place that many windows.
+    std::uniform_int_distribution<> distrib2(1, 10);
+    int window_count = distrib2(gen);
+    for(int i = 0; i < window_count; i++){
+        if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+            int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
+            setTileTextureAndRotation(tiles[i].first, tiles[i].second, 105, 2, rotation);
         }
     }
 }
