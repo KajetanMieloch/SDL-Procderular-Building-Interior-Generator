@@ -297,6 +297,12 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                             case 118:
                                 SDL_RenderCopyEx(renderer, electricStoveTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
+                            case 119:
+                                SDL_RenderCopyEx(renderer, fridgeClosedTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 120:
+                                SDL_RenderCopyEx(renderer, fridgeOpenTex, NULL, &secondLayerRect, secondLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &secondLayerRect);
                                 break;
