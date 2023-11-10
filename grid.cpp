@@ -120,18 +120,6 @@ Grid::~Grid() {
 }
 
 
-void Grid::handleEvent(SDL_Event& e) {
-    if (e.type == SDL_MOUSEBUTTONDOWN) {
-        int x = e.button.x / tileSize;
-        int y = e.button.y / tileSize;
-
-        if (x >= 0 && x < visibleSize && y >= 0 && y < visibleSize) {
-            setTileTextureAndRotation(x, y, 2, 1);
-        }
-    }
-}
-
-
 int Grid::getTileTexture(int x, int y, int layer) {
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch (layer) {
@@ -139,8 +127,10 @@ int Grid::getTileTexture(int x, int y, int layer) {
                 return firstLayer.grid[x][y];
             case 2:
                 return secondLayer.grid[x][y];
+            case 3:
+                return thirdLayer.grid[x][y];
             default:
-                return grid[x][y];
+                return 0;
         }
     }
     return 0;
@@ -153,6 +143,8 @@ int Grid::getTileRotation(int x, int y, int layer) {
                 return firstLayer.rotate[x][y];
             case 2:
                 return secondLayer.rotate[x][y];
+            case 3:
+                return thirdLayer.rotate[x][y];
             default:
                 return 0;
         }
@@ -171,6 +163,9 @@ void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate
                 secondLayer.grid[x][y] = id;
                 secondLayer.rotate[x][y] = rotate;
                 break;
+            case 3:
+                thirdLayer.grid[x][y] = id;
+                thirdLayer.rotate[x][y] = rotate;
             default:
                 grid[x][y] = id;
                 break;
@@ -194,8 +189,10 @@ void Grid::handleMouseClick(int x, int y, int id, int rotate) {
 
         if(id < 100){
             setTileTextureAndRotation(x,y,id,1, rotate);
-        }else if (id >= 100){
+        }else if (id >= 100 && id < 200){
             setTileTextureAndRotation(x,y,id,2, rotate);
+        }else if (id >= 200){
+            setTileTextureAndRotation(x,y,id,3,rotate);
         }
     }
 }
@@ -312,6 +309,7 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                         // Render the third layer
                         int thirdLayerTile = getTileTexture(x, y, 3);
                         int thirdLayerRotation = getTileRotation(x, y, 3);
+                        std::cout<<thirdLayerTile<<std::endl;
                         SDL_Rect thirdLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (thirdLayerTile) {
                             case 201:
@@ -446,8 +444,6 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
             setTileTextureAndRotation(i, j, id, 1);
             //On random not taken tiles render all furniture
             
-
-
 
             //on boreders of rectangle
             if (i == x && j != y && j != y + h - 1) {
