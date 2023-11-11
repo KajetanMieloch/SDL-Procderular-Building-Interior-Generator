@@ -41,7 +41,7 @@ public:
     Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud);
     ~Grid();
 
-    static const int TILE_SIZE = 48; // Set the desired size of each tile
+    static const int TILE_SIZE = 64; // Set the desired size of each tile
     static const int GRID_SIZE = 52; // Set the desired size of the grid
 
     void init();
@@ -49,7 +49,8 @@ public:
     int getTileRotation(int x, int y, int layer);
     void setTileTextureAndRotation(int x, int y, int id, int layer, int rotate = 0);
     void handleMouseClick(int x, int y, int id, int rotate = 0);
-    void generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
+    void generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
+    void generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void handleEvent(SDL_Event& e);

@@ -309,7 +309,6 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                         // Render the third layer
                         int thirdLayerTile = getTileTexture(x, y, 3);
                         int thirdLayerRotation = getTileRotation(x, y, 3);
-                        std::cout<<thirdLayerTile<<std::endl;
                         SDL_Rect thirdLayerRect = {(x - startX) * tileSize, (y - startY) * tileSize, tileSize, tileSize};
                         switch (thirdLayerTile) {
                             case 201:
@@ -362,16 +361,25 @@ srand(static_cast<unsigned int>(time(nullptr)));
 
 // Create a random number generator engine
 std::mt19937 gen(rand());
-std::uniform_int_distribution<int> valueDistribution(5, 10);  // Distribution for values between 5 and 30
-std::uniform_int_distribution<int> binaryDistribution(1, 2);  // Distribution for values 1 or 2
+std::uniform_int_distribution<int> valueDistribution(10, 20);  // Distribution for values between 10 and 20
+std::uniform_int_distribution<int> diceDistribution(1, 6); // Distribution for dice between 1 and 6
 
-generateRectangle(
+generateRoomWithAllVariations(
     renderer,
     valueDistribution(gen),  // Generate a random value between 5 and 30
     valueDistribution(gen),  // Generate a random value between 5 and 30
     valueDistribution(gen),  // Generate a random value between 5 and 30
     valueDistribution(gen),  // Generate a random value between 5 and 30
-    binaryDistribution(gen)  // Generate a random value of 1 or 2
+    diceDistribution(gen)    // Generate a random value between 1 and 6
+        
+);
+generateKitchen(
+    renderer,
+    valueDistribution(gen) * 2, // Generate a random value between 5 and 30
+    valueDistribution(gen) * 2,  // Generate a random value between 5 and 30
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    valueDistribution(gen),  // Generate a random value between 5 and 30
+    diceDistribution(gen)    // Generate a random value between 1 and 6
 );
 
 }
@@ -435,7 +443,7 @@ int Grid::getRotationOfBorderingTileWithId(int x, int y, int id, int layer){
 
 //Room generator
 
-void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
+void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
     //Generate rectangle with setTileTextureAndRotation
     std::vector<std::pair<int, int>> tiles;
     for (int i = x; i < x + w; i++) {
@@ -443,8 +451,238 @@ void Grid::generateRectangle(SDL_Renderer* renderer, int x, int y, int w, int h,
 
             setTileTextureAndRotation(i, j, id, 1);
             //On random not taken tiles render all furniture
-            
+            if (i != x && i != x + w - 1 && j != y && j != y + h - 1) {
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> distrib(0, 200);
+                int random = distrib(gen);
 
+                //random rotation (0,90,180,270)
+                std::uniform_int_distribution<> distrib3(0, 3);
+                int random3 = distrib3(gen);
+                int rotation = 0;
+                switch (random3) {
+                    case 0:
+                        rotation = 0;
+                        break;
+                    case 1:
+                        rotation = 90;
+                        break;
+                    case 2:
+                        rotation = 180;
+                        break;
+                    case 3:
+                        rotation = 270;
+                        break;
+                }
+                
+                if (random < 30) {
+                    setTileTextureAndRotation(i, j, 106, 2, rotation);
+                } else if (random < 35) {
+                    setTileTextureAndRotation(i, j, 107, 2, rotation);
+                } else if (random < 40) {
+                    setTileTextureAndRotation(i, j, 108, 2, rotation);
+                } else if (random < 45) {
+                    setTileTextureAndRotation(i, j, 109, 2, rotation);
+                } else if (random < 50) {
+                    setTileTextureAndRotation(i, j, 110, 2, rotation);
+                } else if (random < 55) {
+                    setTileTextureAndRotation(i, j, 111, 2, rotation);
+                } else if (random < 60) {
+                    setTileTextureAndRotation(i, j, 112, 2, rotation);
+                } else if (random < 65) {
+                    setTileTextureAndRotation(i, j, 113, 2, rotation);
+                } else if (random < 70) {
+                    setTileTextureAndRotation(i, j, 114, 2, rotation);
+                } else if (random < 75) {
+                    setTileTextureAndRotation(i, j, 115, 2, rotation);
+                } else if (random < 80) {
+                    setTileTextureAndRotation(i, j, 116, 2, rotation);
+                } else if (random < 85) {
+                    setTileTextureAndRotation(i, j, 117, 2, rotation);
+                } else if (random < 90) {
+                    setTileTextureAndRotation(i, j, 118, 2, rotation);
+                }
+
+                //New random number for third layer
+                std::uniform_int_distribution<> distrib2(0, 1000);
+                int random2 = distrib2(gen);
+                if (random2 < 5) {
+\
+                    setTileTextureAndRotation(i, j, 201, 3, rotation);
+                } else if (random2 < 10) {
+                    setTileTextureAndRotation(i, j, 202, 3, rotation);
+                } else if (random2 < 15) {
+                    setTileTextureAndRotation(i, j, 203, 3, rotation);
+                } else if (random2 < 20) {
+                    setTileTextureAndRotation(i, j, 204, 3, rotation);
+                } else if (random2 < 25) {
+                    setTileTextureAndRotation(i, j, 205, 3, rotation);
+                } else if (random2 < 30) {
+                    setTileTextureAndRotation(i, j, 206, 3, rotation);
+                } else if (random2 < 35) {
+                    setTileTextureAndRotation(i, j, 207, 3, rotation);
+                } else if (random2 < 40) {
+                    setTileTextureAndRotation(i, j, 208, 3, rotation);
+                } else if (random2 < 45) {
+                    setTileTextureAndRotation(i, j, 209, 3, rotation);
+                } else if (random2 < 50) {
+                    setTileTextureAndRotation(i, j, 210, 3, rotation);
+                } else if (random2 < 55) {
+                    setTileTextureAndRotation(i, j, 211, 3, rotation);
+                }
+
+            } 
+            //on boreders of rectangle
+            if (i == x && j != y && j != y + h - 1) {
+                setTileTextureAndRotation(i, j, 103, 2, 0);
+                tiles.push_back(std::make_pair(i, j));
+            } else if (i == x + w - 1 && j != y && j != y + h - 1) {
+                setTileTextureAndRotation(i, j, 103, 2, 0);
+                tiles.push_back(std::make_pair(i, j));
+            } else if (j == y && i != x && i != x + w - 1) {
+                setTileTextureAndRotation(i, j, 103, 2, 90);
+                tiles.push_back(std::make_pair(i, j));
+            } else if (j == y + h - 1 && i != x && i != x + w - 1) {
+                setTileTextureAndRotation(i, j, 103, 2, 90);
+                tiles.push_back(std::make_pair(i, j));
+            }
+
+            //on corners of rectangle
+            if (i == x && j == y) {
+                setTileTextureAndRotation(i, j, 102, 2, 270);
+            } else if (i == x + w - 1 && j == y) {
+                setTileTextureAndRotation(i, j, 102, 2, 0);
+            } else if (i == x && j == y + h - 1) {
+                setTileTextureAndRotation(i, j, 102, 2, 180);
+            } else if (i == x + w - 1 && j == y + h - 1) {
+                setTileTextureAndRotation(i, j, 102, 2, 90);
+            }
+        }
+    }
+
+    //randomly get one coordinate of wall
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, tiles.size() - 1);
+
+    //Shuffle tiles
+    std::shuffle(tiles.begin(), tiles.end(), std::mt19937{std::random_device{}()});
+
+    //For evry tile next to the randomly selected coordinate, check if it is a wall
+    //If it is a wall, get the rotation of the wall
+    for(int i = 0; i < tiles.size(); i++){
+        if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+            int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
+            //Set the tile to a door
+            setTileTextureAndRotation(tiles[i].first, tiles[i].second, 104, 2, rotation);
+            tiles.erase(tiles.begin() + i);
+            break;
+        }
+    }
+    //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
+    //If it is a empty tile, get the rotation of the wall and set it to a window
+    //Generate a random number between 2 and 4 and place that many windows.
+    std::uniform_int_distribution<> distrib2(2, 4);
+    int window_count = distrib2(gen);
+    for(int i = 0; i < window_count; i++){
+        if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
+            int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
+            setTileTextureAndRotation(tiles[i].first, tiles[i].second, 105, 2, rotation);
+        }
+    }
+}
+
+void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, int id){
+   //Generate rectangle with setTileTextureAndRotation
+    std::vector<std::pair<int, int>> tiles;
+    for (int i = x; i < x + w; i++) {
+        for (int j = y; j < y + h; j++) {
+
+            setTileTextureAndRotation(i, j, id, 1);
+            //On random not taken tiles render all furniture
+            if (i != x && i != x + w - 1 && j != y && j != y + h - 1) {
+                std::random_device rd;
+                std::mt19937 gen(rd());
+                std::uniform_int_distribution<> distrib(0, 200);
+                int random = distrib(gen);
+
+                //random rotation (0,90,180,270)
+                std::uniform_int_distribution<> distrib3(0, 3);
+                int random3 = distrib3(gen);
+                int rotation = 0;
+                switch (random3) {
+                    case 0:
+                        rotation = 0;
+                        break;
+                    case 1:
+                        rotation = 90;
+                        break;
+                    case 2:
+                        rotation = 180;
+                        break;
+                    case 3:
+                        rotation = 270;
+                        break;
+                }
+                
+                if (random < 30) {
+                    setTileTextureAndRotation(i, j, 106, 2, rotation);
+                } else if (random < 35) {
+                    setTileTextureAndRotation(i, j, 107, 2, rotation);
+                } else if (random < 40) {
+                    setTileTextureAndRotation(i, j, 108, 2, rotation);
+                } else if (random < 45) {
+                    setTileTextureAndRotation(i, j, 109, 2, rotation);
+                } else if (random < 50) {
+                    setTileTextureAndRotation(i, j, 110, 2, rotation);
+                } else if (random < 55) {
+                    setTileTextureAndRotation(i, j, 111, 2, rotation);
+                } else if (random < 60) {
+                    setTileTextureAndRotation(i, j, 112, 2, rotation);
+                } else if (random < 65) {
+                    setTileTextureAndRotation(i, j, 113, 2, rotation);
+                } else if (random < 70) {
+                    setTileTextureAndRotation(i, j, 114, 2, rotation);
+                } else if (random < 75) {
+                    setTileTextureAndRotation(i, j, 115, 2, rotation);
+                } else if (random < 80) {
+                    setTileTextureAndRotation(i, j, 116, 2, rotation);
+                } else if (random < 85) {
+                    setTileTextureAndRotation(i, j, 117, 2, rotation);
+                } else if (random < 90) {
+                    setTileTextureAndRotation(i, j, 118, 2, rotation);
+                }
+
+                //New random number for third layer
+                std::uniform_int_distribution<> distrib2(0, 1000);
+                int random2 = distrib2(gen);
+                if (random2 < 5) {
+\
+                    setTileTextureAndRotation(i, j, 201, 3, rotation);
+                } else if (random2 < 10) {
+                    setTileTextureAndRotation(i, j, 202, 3, rotation);
+                } else if (random2 < 15) {
+                    setTileTextureAndRotation(i, j, 203, 3, rotation);
+                } else if (random2 < 20) {
+                    setTileTextureAndRotation(i, j, 204, 3, rotation);
+                } else if (random2 < 25) {
+                    setTileTextureAndRotation(i, j, 205, 3, rotation);
+                } else if (random2 < 30) {
+                    setTileTextureAndRotation(i, j, 206, 3, rotation);
+                } else if (random2 < 35) {
+                    setTileTextureAndRotation(i, j, 207, 3, rotation);
+                } else if (random2 < 40) {
+                    setTileTextureAndRotation(i, j, 208, 3, rotation);
+                } else if (random2 < 45) {
+                    setTileTextureAndRotation(i, j, 209, 3, rotation);
+                } else if (random2 < 50) {
+                    setTileTextureAndRotation(i, j, 210, 3, rotation);
+                } else if (random2 < 55) {
+                    setTileTextureAndRotation(i, j, 211, 3, rotation);
+                }
+
+            } 
             //on boreders of rectangle
             if (i == x && j != y && j != y + h - 1) {
                 setTileTextureAndRotation(i, j, 103, 2, 0);

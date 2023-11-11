@@ -110,7 +110,6 @@ int Equipment::processClick(int mouseX, int mouseY){
     } else if (clickedI == 1){
         switch (clickedJ){
 
-            //110, 111, 108, 109, 106, 107, 112, 113, 119, 120
             case 0:
                 return 110;
             case 1:
