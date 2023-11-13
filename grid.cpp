@@ -366,7 +366,7 @@ std::uniform_int_distribution<int> roomDistribution(1, 2);
 std::uniform_int_distribution<int> kitchenDistribution(3, 4);
 std::uniform_int_distribution<int> bathroomDistribution(5,6);
 
-generateRoomWithAllVariations(
+auto [doorX, doorY, doorRot] = generateRoomWithAllVariations(
     renderer,
     roomSizeGenerator(gen),  // Generate a random value between 5 and 30
     roomSizeGenerator(gen),  // Generate a random value between 5 and 30
@@ -374,6 +374,7 @@ generateRoomWithAllVariations(
     roomSizeGenerator(gen),  // Generate a random value between 5 and 30
     roomDistribution(gen)    // Generate a random value between 1 and 2
 );
+std::cout<<doorX<<std::endl;
 generateKitchen(
     renderer,
     roomSizeGenerator(gen) * 1.8,
@@ -444,9 +445,12 @@ int Grid::getRotationOfBorderingTileWithId(int x, int y, int id, int layer){
 
 //Room generator
 
-void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id) {
+std::tuple<int, int, int> Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id){
     //Generate rectangle with setTileTextureAndRotation
     std::vector<std::pair<int, int>> tiles;
+    int posXOfFirstDoor;
+    int posYOfFirstDoor;
+    int rotationOfFirstDoor;
     for (int i = x; i < x + w; i++) {
         for (int j = y; j < y + h; j++) {
 
@@ -582,12 +586,22 @@ void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, i
             int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
             //Set the tile to a door
             setTileTextureAndRotation(tiles[i].first, tiles[i].second, 104, 2, rotation);
+            posXOfFirstDoor= tiles[i].first;
+            posYOfFirstDoor = tiles[i].second;
+            rotationOfFirstDoor = rotation;
             
             // Generate a random index for the second door
             int randomIndex = distrib(gen);
             if (randomIndex != i && randomIndex < tiles.size()) { // Ensure the second door is not at the same position as the first
                 int newRotation = getTileRotation(tiles[randomIndex].first, tiles[randomIndex].second, 2);
                 setTileTextureAndRotation(tiles[randomIndex].first, tiles[randomIndex].second, 104, 2, newRotation);
+            }
+
+            // Generate a random index for the third door
+            int randomIndex2 = distrib(gen);
+            if (randomIndex2 != i && randomIndex2 != randomIndex && randomIndex2 < tiles.size()) { // Ensure the third door is not at the same position as the first or second
+                int newRotation = getTileRotation(tiles[randomIndex2].first, tiles[randomIndex2].second, 2);
+                setTileTextureAndRotation(tiles[randomIndex2].first, tiles[randomIndex2].second, 104, 2, newRotation);
             }
 
             tiles.erase(tiles.begin() + i);
@@ -606,6 +620,7 @@ void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, i
             setTileTextureAndRotation(tiles[i].first, tiles[i].second, 105, 2, rotation);
         }
     }
+    return std::make_tuple(posXOfFirstDoor, posYOfFirstDoor, rotationOfFirstDoor);
 }
 
 void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, int id){

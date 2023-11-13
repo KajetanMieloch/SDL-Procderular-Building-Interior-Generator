@@ -8,6 +8,7 @@
 #include <ctime>
 #include "hud.hpp"
 #include <algorithm>
+#include <tuple>
 
 class FirstLayer {
 public:
@@ -49,7 +50,7 @@ public:
     int getTileRotation(int x, int y, int layer);
     void setTileTextureAndRotation(int x, int y, int id, int layer, int rotate = 0);
     void handleMouseClick(int x, int y, int id, int rotate = 0);
-    void generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
+    std::tuple<int, int, int> generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
@@ -57,6 +58,7 @@ public:
     void generateLevel(SDL_Renderer* renderer);
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
     int getRotationOfBorderingTileWithId(int x, int y, int id, int layer);
+
     
     SDL_Texture* LoadTexture(const std::string& filePath);
 
