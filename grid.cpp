@@ -220,13 +220,13 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                                 SDL_RenderCopyEx(renderer, snowBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             case 4:
-                                SDL_RenderCopyEx(renderer, meteoriteBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                SDL_RenderCopyEx(renderer, platinumBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             case 5:
-                                SDL_RenderCopyEx(renderer, pearlstoneBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                SDL_RenderCopyEx(renderer, meteoriteBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             case 6:
-                                SDL_RenderCopyEx(renderer, platinumBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
+                                SDL_RenderCopyEx(renderer, pearlstoneBrickTex, NULL, &firstLayerRect, firstLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             default:
                                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White for unclicked tiles
@@ -361,25 +361,26 @@ srand(static_cast<unsigned int>(time(nullptr)));
 
 // Create a random number generator engine
 std::mt19937 gen(rand());
-std::uniform_int_distribution<int> valueDistribution(10, 20);  // Distribution for values between 10 and 20
-std::uniform_int_distribution<int> diceDistribution(1, 6); // Distribution for dice between 1 and 6
+std::uniform_int_distribution<int> roomSizeGenerator(10, 20);
+std::uniform_int_distribution<int> roomDistribution(1, 2);
+std::uniform_int_distribution<int> kitchenDistribution(3, 4);
+std::uniform_int_distribution<int> bathroomDistribution(5,6);
 
 generateRoomWithAllVariations(
     renderer,
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    diceDistribution(gen)    // Generate a random value between 1 and 6
-        
+    roomSizeGenerator(gen),  // Generate a random value between 5 and 30
+    roomSizeGenerator(gen),  // Generate a random value between 5 and 30
+    roomSizeGenerator(gen),  // Generate a random value between 5 and 30
+    roomSizeGenerator(gen),  // Generate a random value between 5 and 30
+    roomDistribution(gen)    // Generate a random value between 1 and 2
 );
 generateKitchen(
     renderer,
-    valueDistribution(gen) * 2, // Generate a random value between 5 and 30
-    valueDistribution(gen) * 2,  // Generate a random value between 5 and 30
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    valueDistribution(gen),  // Generate a random value between 5 and 30
-    diceDistribution(gen)    // Generate a random value between 1 and 6
+    roomSizeGenerator(gen) * 1.8,
+    roomSizeGenerator(gen) * 1.8,
+    roomSizeGenerator(gen),
+    roomSizeGenerator(gen),
+    kitchenDistribution(gen)
 );
 
 }
@@ -502,6 +503,10 @@ void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, i
                     setTileTextureAndRotation(i, j, 117, 2, rotation);
                 } else if (random < 90) {
                     setTileTextureAndRotation(i, j, 118, 2, rotation);
+                } else if (random < 95) {
+                    setTileTextureAndRotation(i, j, 119, 2, rotation);
+                } else if (random < 100) {
+                    setTileTextureAndRotation(i, j, 120, 2, rotation);
                 }
 
                 //New random number for third layer
@@ -571,15 +576,25 @@ void Grid::generateRoomWithAllVariations(SDL_Renderer* renderer, int x, int y, i
 
     //For evry tile next to the randomly selected coordinate, check if it is a wall
     //If it is a wall, get the rotation of the wall
+    //Generate door (id 104), and second door (id 104), on another x or y axis
     for(int i = 0; i < tiles.size(); i++){
         if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
             int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
             //Set the tile to a door
             setTileTextureAndRotation(tiles[i].first, tiles[i].second, 104, 2, rotation);
+            
+            // Generate a random index for the second door
+            int randomIndex = distrib(gen);
+            if (randomIndex != i && randomIndex < tiles.size()) { // Ensure the second door is not at the same position as the first
+                int newRotation = getTileRotation(tiles[randomIndex].first, tiles[randomIndex].second, 2);
+                setTileTextureAndRotation(tiles[randomIndex].first, tiles[randomIndex].second, 104, 2, newRotation);
+            }
+
             tiles.erase(tiles.begin() + i);
             break;
         }
     }
+
     //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
     //If it is a empty tile, get the rotation of the wall and set it to a window
     //Generate a random number between 2 and 4 and place that many windows.
@@ -604,7 +619,7 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
             if (i != x && i != x + w - 1 && j != y && j != y + h - 1) {
                 std::random_device rd;
                 std::mt19937 gen(rd());
-                std::uniform_int_distribution<> distrib(0, 200);
+                std::uniform_int_distribution<> distrib(0, 1000);
                 int random = distrib(gen);
 
                 //random rotation (0,90,180,270)
@@ -630,14 +645,6 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
                     setTileTextureAndRotation(i, j, 106, 2, rotation);
                 } else if (random < 35) {
                     setTileTextureAndRotation(i, j, 107, 2, rotation);
-                } else if (random < 40) {
-                    setTileTextureAndRotation(i, j, 108, 2, rotation);
-                } else if (random < 45) {
-                    setTileTextureAndRotation(i, j, 109, 2, rotation);
-                } else if (random < 50) {
-                    setTileTextureAndRotation(i, j, 110, 2, rotation);
-                } else if (random < 55) {
-                    setTileTextureAndRotation(i, j, 111, 2, rotation);
                 } else if (random < 60) {
                     setTileTextureAndRotation(i, j, 112, 2, rotation);
                 } else if (random < 65) {
@@ -652,6 +659,10 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
                     setTileTextureAndRotation(i, j, 117, 2, rotation);
                 } else if (random < 90) {
                     setTileTextureAndRotation(i, j, 118, 2, rotation);
+                } else if (random < 95) {
+                    setTileTextureAndRotation(i, j, 119, 2, rotation);
+                } else if (random < 100) {
+                    setTileTextureAndRotation(i, j, 120, 2, rotation);
                 }
 
                 //New random number for third layer
@@ -721,15 +732,25 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
 
     //For evry tile next to the randomly selected coordinate, check if it is a wall
     //If it is a wall, get the rotation of the wall
+    //Generate door (id 104), and second door (id 104), on another x or y axis
     for(int i = 0; i < tiles.size(); i++){
         if(getTileTexture(tiles[i].first, tiles[i].second, 2) == 103){
             int rotation = getTileRotation(tiles[i].first, tiles[i].second, 2);
             //Set the tile to a door
             setTileTextureAndRotation(tiles[i].first, tiles[i].second, 104, 2, rotation);
+            
+            // Generate a random index for the second door
+            int randomIndex = distrib(gen);
+            if (randomIndex != i && randomIndex < tiles.size()) { // Ensure the second door is not at the same position as the first
+                int newRotation = getTileRotation(tiles[randomIndex].first, tiles[randomIndex].second, 2);
+                setTileTextureAndRotation(tiles[randomIndex].first, tiles[randomIndex].second, 104, 2, newRotation);
+            }
+
             tiles.erase(tiles.begin() + i);
             break;
         }
     }
+
     //For every tile next to the randomly selected coordinate, check if it is a empty tile (id: 0)
     //If it is a empty tile, get the rotation of the wall and set it to a window
     //Generate a random number between 2 and 4 and place that many windows.
