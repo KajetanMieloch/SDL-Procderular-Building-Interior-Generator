@@ -49,6 +49,10 @@ bed2Tex = LoadTexture("res/textures/bed2.png");
     transparentTex = LoadTexture("res/textures/transparent.png");
     wallTex = LoadTexture("res/textures/wall.png");
     windowTex = LoadTexture("res/textures/window.png");
+    n1Tex = LoadTexture("res/textures/1.png");
+    n2Tex = LoadTexture("res/textures/2.png");
+    n3Tex = LoadTexture("res/textures/3.png");
+    n4Tex = LoadTexture("res/textures/4.png");
 }
 
 SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {
@@ -153,6 +157,31 @@ int Equipment::processClick(int mouseX, int mouseY){
             return 4;
         case 8:
             return 5;        
+        default:
+            return -1;
+        }
+    } else if (clickedI == 3){
+        switch (clickedJ){
+        case 0:
+            return 6;
+        case 1:
+            return 7;
+        case 2:
+            return 8;
+        case 3:
+            return 9;
+        case 4:
+            return 10;
+        case 5:
+            return 11;
+        case 6:
+            return 212;
+        case 7:
+            return 213;
+        case 8:
+            return 214;
+        case 9:
+            return 215;        
         default:
             return -1;
         }
@@ -304,6 +333,44 @@ void Equipment::generateEquipment() {
                         break;
                     case 9:
                         SDL_RenderCopy(renderer, platinumBrickTex, NULL, &cellRect);
+                        break;
+                    default:
+                        // Handle other cases, if necessary
+                        break;
+                        
+                }
+            }
+            if(i == 3) {
+                switch (j) {
+                    case 0:
+                        SDL_RenderCopy(renderer, plateTex, NULL, &cellRect);
+                        break;
+                    case 1:
+                        SDL_RenderCopy(renderer, plateDirtyTex, NULL, &cellRect);
+                        break;
+                    case 2:
+                        SDL_RenderCopy(renderer, plateDirtyMuchTex, NULL, &cellRect);
+                        break;
+                    case 3:
+                        SDL_RenderCopy(renderer, plateTomatoTex, NULL, &cellRect);
+                        break;
+                    case 4:
+                        SDL_RenderCopy(renderer, plateTomatoLowTex, NULL, &cellRect);
+                        break;
+                    case 5:
+                        SDL_RenderCopy(renderer, platePotatoTex, NULL, &cellRect);
+                        break;
+                    case 6:
+                        SDL_RenderCopy(renderer, n1Tex, NULL, &cellRect);
+                        break;
+                    case 7:
+                        SDL_RenderCopy(renderer, n2Tex, NULL, &cellRect);
+                        break;
+                    case 8:
+                        SDL_RenderCopy(renderer, n3Tex, NULL, &cellRect);
+                        break;
+                    case 9:
+                        SDL_RenderCopy(renderer, n4Tex, NULL, &cellRect);
                         break;
                     default:
                         // Handle other cases, if necessary

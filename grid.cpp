@@ -40,6 +40,10 @@ void Grid::init(){
     transparentTex = LoadTexture("res/textures/transparent.png");
     wallTex = LoadTexture("res/textures/wall.png");
     windowTex = LoadTexture("res/textures/window.png");
+    n1Tex = LoadTexture("res/textures/1.png");
+    n2Tex = LoadTexture("res/textures/2.png");
+    n3Tex = LoadTexture("res/textures/3.png");
+    n4Tex = LoadTexture("res/textures/4.png");
 }
 
 SDL_Texture* Grid::LoadTexture(const std::string& filePath) {
@@ -83,6 +87,7 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
         for (int j = 0; j < gridSize; j++) {
             firstLayer.grid[i][j] = 0;
             firstLayer.rotate[i][j] = 0;
+            firstLayer.readyToBeLinked[i][j] = false;
         }
     }
 
@@ -95,6 +100,7 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
             secondLayer.rotate[i][j] = 0;
+            secondLayer.readyToBeLinked[i][j] = false;
         }
     }
 
@@ -107,6 +113,7 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
         for (int j = 0; j < gridSize; j++) {
             thirdLayer.grid[i][j] = 0;
             thirdLayer.rotate[i][j] = 0;
+            thirdLayer.readyToBeLinked[i][j] = false;
         }
     }
 
@@ -193,6 +200,23 @@ void Grid::handleMouseClick(int x, int y, int id, int rotate) {
             setTileTextureAndRotation(x,y,id,2, rotate);
         }else if (id >= 200){
             setTileTextureAndRotation(x,y,id,3,rotate);
+        }
+    }
+}
+
+void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        switch (layer) {
+            case 1:
+                firstLayer.readyToBeLinked[x][y] = true;
+                break;
+            case 2:
+                secondLayer.readyToBeLinked[x][y] = true;
+                break;
+            case 3:
+                thirdLayer.readyToBeLinked[x][y] = true;
+            default:
+                break;
         }
     }
 }
@@ -343,6 +367,18 @@ void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int 
                                 break;
                             case 211:
                                 SDL_RenderCopyEx(renderer, potWaterTex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 212:
+                                SDL_RenderCopyEx(renderer, n1Tex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 213:
+                                SDL_RenderCopyEx(renderer, n2Tex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 214:
+                                SDL_RenderCopyEx(renderer, n3Tex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
+                                break;
+                            case 215:
+                                SDL_RenderCopyEx(renderer, n4Tex, NULL, &thirdLayerRect, thirdLayerRotation, NULL, SDL_FLIP_NONE);
                                 break;
                             default:
                                 SDL_RenderCopy(renderer, transparentTex, NULL, &thirdLayerRect);

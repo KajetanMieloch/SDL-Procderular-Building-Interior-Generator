@@ -14,6 +14,7 @@ class FirstLayer {
 public:
     int** grid;
     int** rotate;
+    bool** readyToBeLinked;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -23,6 +24,7 @@ class SecondLayer {
 public:
     int** grid;
     int** rotate;
+    bool** readyToBeLinked;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -32,6 +34,7 @@ class ThirdLayer {
 public:
     int** grid;
     int** rotate;
+    bool** readyToBeLinked;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -58,6 +61,7 @@ public:
     void generateLevel(SDL_Renderer* renderer);
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
     int getRotationOfBorderingTileWithId(int x, int y, int id, int layer);
+    void markTileAsReadyToBeLinked(int x, int y, int layer);
 
     
     SDL_Texture* LoadTexture(const std::string& filePath);
@@ -98,6 +102,10 @@ public:
     SDL_Texture* transparentTex;
     SDL_Texture* wallTex;
     SDL_Texture* windowTex;
+    SDL_Texture* n1Tex;
+    SDL_Texture* n2Tex;
+    SDL_Texture* n3Tex;
+    SDL_Texture* n4Tex;
 
 private:
     SDL_Renderer* renderer;

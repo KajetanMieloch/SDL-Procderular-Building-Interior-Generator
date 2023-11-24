@@ -50,6 +50,10 @@ private:
     SDL_Texture* transparentTex;
     SDL_Texture* wallTex;
     SDL_Texture* windowTex;
+    SDL_Texture* n1Tex;
+    SDL_Texture* n2Tex;
+    SDL_Texture* n3Tex;
+    SDL_Texture* n4Tex;
 
 public:
     Equipment(SDL_Renderer* renderer, SDL_Window* window);
