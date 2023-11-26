@@ -273,6 +273,19 @@ void Grid::moveTile(int x, int y, int layer){
     //Coursor is now mode 2
 }
 
+void Grid::cloneTile(int x, int y, int layer){
+    //Delete existing tile
+    if(!isTileCloned){
+    idOfTileBeingCloned = getTileTexture(x, y, layer);
+    rotationOfTileBeingCloned = getTileRotation(x, y, layer);
+    isTileCloned = true;
+    }else{
+        setTileTextureAndRotation(x, y, idOfTileBeingCloned, layer, rotationOfTileBeingCloned);
+    }
+    //Click on another tile and replace it with coursor texture
+    //Coursor is now mode 2
+}
+
 void Grid::setCoursorMode(int mode){
     coursorMode = mode;
     SDL_Cursor* cursor;
@@ -311,6 +324,12 @@ void Grid::setCoursorMode(int mode){
             break;
         case 8: {
             SDL_Surface* surface = IMG_Load("res/rotate.png");
+            cursor = SDL_CreateColorCursor(surface, 0, 0);
+            SDL_SetCursor(cursor);
+            break;
+        }
+        case 9: {
+            SDL_Surface* surface = IMG_Load("res/picker.png");
             cursor = SDL_CreateColorCursor(surface, 0, 0);
             SDL_SetCursor(cursor);
             break;

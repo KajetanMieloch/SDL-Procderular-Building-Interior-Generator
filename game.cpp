@@ -150,6 +150,12 @@ void Game::handleEvents() {
                 case SDLK_m:
                     grid->setCoursorMode(2);
                     break;
+                
+                case SDLK_o:
+                    grid->setIsTileCloned(false);
+                    grid->setCoursorMode(9);
+                    break;
+
                 default:
                     break;
             }
@@ -180,6 +186,10 @@ void Game::handleEvents() {
 
             case 8:
                 grid->rotateTile(adjustedX, adjustedY, hud->getRenderLayer());
+                break;
+            
+            case 9:
+                grid->cloneTile(adjustedX, adjustedY, hud->getRenderLayer());
                 break;
 
             default:

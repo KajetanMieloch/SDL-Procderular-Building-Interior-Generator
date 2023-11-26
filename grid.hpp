@@ -72,6 +72,12 @@ public:
     int rotationOfTileBeingMoved = 0;
     bool isTileSelected = false;
 
+    void cloneTile(int x, int y, int layer);
+    void setIsTileCloned(bool isTileCloned) { this->isTileCloned = isTileCloned; }
+    int idOfTileBeingCloned = -1;
+    int rotationOfTileBeingCloned = 0;
+    bool isTileCloned = false;
+
     void setCoursorMode(int mode);
     int getCoursorMode() { return coursorMode; }
 
