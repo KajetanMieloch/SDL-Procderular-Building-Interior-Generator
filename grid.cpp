@@ -82,14 +82,17 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     firstLayer.grid = new int*[gridSize];
     firstLayer.rotate = new int*[gridSize];
     firstLayer.readyToBeLinked = new bool*[gridSize];
+    firstLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         firstLayer.grid[i] = new int[gridSize];
         firstLayer.rotate[i] = new int[gridSize];
         firstLayer.readyToBeLinked[i] = new bool[gridSize];
+        firstLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             firstLayer.grid[i][j] = 0;
             firstLayer.rotate[i][j] = 0;
             firstLayer.readyToBeLinked[i][j] = false;
+            firstLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -97,14 +100,17 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     secondLayer.grid = new int*[gridSize];
     secondLayer.rotate = new int*[gridSize];
     secondLayer.readyToBeLinked = new bool*[gridSize];
+    secondLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         secondLayer.grid[i] = new int[gridSize];
         secondLayer.rotate[i] = new int[gridSize];
         secondLayer.readyToBeLinked[i] = new bool[gridSize];
+        secondLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
             secondLayer.rotate[i][j] = 0;
             secondLayer.readyToBeLinked[i][j] = false;
+            secondLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -112,14 +118,17 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     thirdLayer.grid = new int*[gridSize];
     thirdLayer.rotate = new int*[gridSize];
     thirdLayer.readyToBeLinked = new bool*[gridSize];
+    thirdLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         thirdLayer.grid[i] = new int[gridSize];
         thirdLayer.rotate[i] = new int[gridSize];
         thirdLayer.readyToBeLinked[i] = new bool[gridSize];
+        thirdLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             thirdLayer.grid[i][j] = 0;
             thirdLayer.rotate[i][j] = 0;
             thirdLayer.readyToBeLinked[i][j] = false;
+            thirdLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -215,6 +224,7 @@ void Grid::rotateTile(int x, int y, int layer){
     }
 }
 
+
 void Grid::handleMouseClick(int x, int y, int id, int rotate) {
 
     int mouseY;
@@ -253,6 +263,72 @@ void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
             default:
                 break;
         }
+    }
+}
+
+void Grid::markTileAsReadyToBeMoved(int x, int y, int layer){
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        switch (layer) {
+            case 1:
+                firstLayer.readyToBeMoved[x][y] = true;
+                break;
+            case 2:
+                secondLayer.readyToBeMoved[x][y] = true;
+                break;
+            case 3:
+                thirdLayer.readyToBeMoved[x][y] = true;
+            default:
+                break;
+        }
+    }
+}
+
+void Grid::setCoursorMode(int mode){
+    coursorMode = mode;
+    SDL_Cursor* cursor;
+    switch(mode){
+        case 0:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+            SDL_SetCursor(cursor);
+            break;
+        case 1:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_HAND);
+            SDL_SetCursor(cursor);
+            break;
+        case 2:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
+            SDL_SetCursor(cursor);
+            break;
+        case 3:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENS);
+            SDL_SetCursor(cursor);
+            break;
+        case 4:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEWE);
+            SDL_SetCursor(cursor);
+            break;
+        case 5:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENESW);
+            SDL_SetCursor(cursor);
+            break;
+        case 6:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZENWSE);
+            SDL_SetCursor(cursor);
+            break;
+        case 7:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
+            SDL_SetCursor(cursor);
+            break;
+        case 8: {
+            SDL_Surface* surface = IMG_Load("res/rotate.png");
+            cursor = SDL_CreateColorCursor(surface, 0, 0);
+            SDL_SetCursor(cursor);
+            break;
+        }
+        default:
+            cursor = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
+            SDL_SetCursor(cursor);
+            break;
     }
 }
 

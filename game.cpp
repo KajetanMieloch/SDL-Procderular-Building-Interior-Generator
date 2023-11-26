@@ -132,26 +132,21 @@ void Game::handleEvents() {
                 //Reset the level CASE
                 case SDLK_r:
                     resetLevel();
+                    grid->setCoursorMode(0);
                     break;
                 case SDLK_e:
                     equipment->toggleEquipment();
+                    grid->setCoursorMode(0);
                     break;
-                case SDLK_f:
-                if (activeRotation == 270)
-                    activeRotation = 0;
-                else{
-                    activeRotation += 90;
+                case SDLK_f: {
+                    if (activeRotation == 270)
+                        activeRotation = 0;
+                    else{
+                        activeRotation += 90;
+                    }
+                    grid->setCoursorMode(8);                    
+                    break;
                 }
-
-                int mouseX, mouseY;
-                SDL_GetMouseState(&mouseX, &mouseY);
-
-                adjustedX = (mouseX + cameraX) / Grid::TILE_SIZE;
-                adjustedY = (mouseY + cameraY) / Grid::TILE_SIZE;
-                std::cout << adjustedX << " " << adjustedY << std::endl;
-                grid->rotateTile(adjustedX, adjustedY, hud->getRenderLayer());
-                
-                break;
                 default:
                     break;
             }
@@ -161,6 +156,8 @@ void Game::handleEvents() {
             adjustedX = (event.button.x + cameraX) / Grid::TILE_SIZE;
             adjustedY = (event.button.y + cameraY) / Grid::TILE_SIZE;
 
+            switch (grid -> getCoursorMode()){
+            case 0:
             // Pass the raw mouse coordinates to the equipment close it and break case
             if(equipment->isEquipmentOpen()){
                 activeId = equipment->processClick(event.button.x, event.button.y);
@@ -173,6 +170,15 @@ void Game::handleEvents() {
             if(!equipment->isEquipmentOpen())
                 grid->handleMouseClick(adjustedX, adjustedY, activeId, activeRotation);
             break;
+            
+            case 8:
+                std::cout << "Rotating tile" << std::endl;
+                grid->rotateTile(adjustedX, adjustedY, hud->getRenderLayer());
+                break;
+
+            default:
+                break;
+            }
         default:
             break;
     }

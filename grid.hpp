@@ -15,6 +15,7 @@ public:
     int** grid;
     int** rotate;
     bool** readyToBeLinked;
+    bool** readyToBeMoved;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -25,6 +26,7 @@ public:
     int** grid;
     int** rotate;
     bool** readyToBeLinked;
+    bool** readyToBeMoved;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -35,6 +37,7 @@ public:
     int** grid;
     int** rotate;
     bool** readyToBeLinked;
+    bool** readyToBeMoved;
     // Add any other necessary methods and variables for this layer
 private:
     // Add any necessary methods and variables for this layer
@@ -64,6 +67,12 @@ public:
     void markTileAsReadyToBeLinked(int x, int y, int layer);
     
     void rotateTile(int x, int y, int layer);
+    void markTileAsReadyToBeMoved(int x, int y, int layer);
+
+    void setCoursorMode(int mode);
+    int getCoursorMode() { return coursorMode; }
+
+    int coursorMode = 0;
 
     
     SDL_Texture* LoadTexture(const std::string& filePath);
@@ -122,6 +131,7 @@ private:
     int** grid;
     int** rotate;
     bool** readyToBeLinked;
+    bool** readyToBeMoved;
 };
 
 #endif
