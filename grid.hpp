@@ -62,6 +62,8 @@ public:
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
     int getRotationOfBorderingTileWithId(int x, int y, int id, int layer);
     void markTileAsReadyToBeLinked(int x, int y, int layer);
+    
+    void rotateTile(int x, int y, int layer);
 
     
     SDL_Texture* LoadTexture(const std::string& filePath);

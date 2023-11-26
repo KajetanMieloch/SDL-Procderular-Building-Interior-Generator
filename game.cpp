@@ -141,8 +141,17 @@ void Game::handleEvents() {
                     activeRotation = 0;
                 else{
                     activeRotation += 90;
-                    break;
                 }
+
+                int mouseX, mouseY;
+                SDL_GetMouseState(&mouseX, &mouseY);
+
+                adjustedX = (mouseX + cameraX) / Grid::TILE_SIZE;
+                adjustedY = (mouseY + cameraY) / Grid::TILE_SIZE;
+                std::cout << adjustedX << " " << adjustedY << std::endl;
+                grid->rotateTile(adjustedX, adjustedY, hud->getRenderLayer());
+                
+                break;
                 default:
                     break;
             }

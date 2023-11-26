@@ -186,6 +186,35 @@ void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate
     }
 }
 
+void Grid::rotateTile(int x, int y, int layer){
+    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+        switch (layer) {
+            case 1:
+                if(firstLayer.rotate[x][y] == 270){
+                    firstLayer.rotate[x][y] = 0;
+                }else{
+                    firstLayer.rotate[x][y] += 90;
+                }
+                break;
+            case 2:
+                if(secondLayer.rotate[x][y] == 270){
+                    secondLayer.rotate[x][y] = 0;
+                }else{
+                    secondLayer.rotate[x][y] += 90;
+                }
+                break;
+            case 3:
+                if(thirdLayer.rotate[x][y] == 270){
+                    thirdLayer.rotate[x][y] = 0;
+                }else{
+                    thirdLayer.rotate[x][y] += 90;
+                }
+            default:
+                break;
+        }
+    }
+}
+
 void Grid::handleMouseClick(int x, int y, int id, int rotate) {
 
     int mouseY;
