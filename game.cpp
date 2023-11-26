@@ -147,6 +147,9 @@ void Game::handleEvents() {
                     grid->setCoursorMode(8);                    
                     break;
                 }
+                case SDLK_m:
+                    grid->setCoursorMode(2);
+                    break;
                 default:
                     break;
             }
@@ -171,8 +174,11 @@ void Game::handleEvents() {
                 grid->handleMouseClick(adjustedX, adjustedY, activeId, activeRotation);
             break;
             
+            case 2:
+                grid->moveTile(adjustedX, adjustedY, hud->getRenderLayer());
+                break;
+
             case 8:
-                std::cout << "Rotating tile" << std::endl;
                 grid->rotateTile(adjustedX, adjustedY, hud->getRenderLayer());
                 break;
 

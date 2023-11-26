@@ -82,17 +82,14 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     firstLayer.grid = new int*[gridSize];
     firstLayer.rotate = new int*[gridSize];
     firstLayer.readyToBeLinked = new bool*[gridSize];
-    firstLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         firstLayer.grid[i] = new int[gridSize];
         firstLayer.rotate[i] = new int[gridSize];
         firstLayer.readyToBeLinked[i] = new bool[gridSize];
-        firstLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             firstLayer.grid[i][j] = 0;
             firstLayer.rotate[i][j] = 0;
             firstLayer.readyToBeLinked[i][j] = false;
-            firstLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -100,17 +97,14 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     secondLayer.grid = new int*[gridSize];
     secondLayer.rotate = new int*[gridSize];
     secondLayer.readyToBeLinked = new bool*[gridSize];
-    secondLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         secondLayer.grid[i] = new int[gridSize];
         secondLayer.rotate[i] = new int[gridSize];
         secondLayer.readyToBeLinked[i] = new bool[gridSize];
-        secondLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
             secondLayer.rotate[i][j] = 0;
             secondLayer.readyToBeLinked[i][j] = false;
-            secondLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -118,17 +112,14 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     thirdLayer.grid = new int*[gridSize];
     thirdLayer.rotate = new int*[gridSize];
     thirdLayer.readyToBeLinked = new bool*[gridSize];
-    thirdLayer.readyToBeMoved = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         thirdLayer.grid[i] = new int[gridSize];
         thirdLayer.rotate[i] = new int[gridSize];
         thirdLayer.readyToBeLinked[i] = new bool[gridSize];
-        thirdLayer.readyToBeMoved[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             thirdLayer.grid[i][j] = 0;
             thirdLayer.rotate[i][j] = 0;
             thirdLayer.readyToBeLinked[i][j] = false;
-            thirdLayer.readyToBeMoved[i][j] = false;
         }
     }
 
@@ -266,21 +257,20 @@ void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
     }
 }
 
-void Grid::markTileAsReadyToBeMoved(int x, int y, int layer){
-    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-        switch (layer) {
-            case 1:
-                firstLayer.readyToBeMoved[x][y] = true;
-                break;
-            case 2:
-                secondLayer.readyToBeMoved[x][y] = true;
-                break;
-            case 3:
-                thirdLayer.readyToBeMoved[x][y] = true;
-            default:
-                break;
-        }
+void Grid::moveTile(int x, int y, int layer){
+    //Delete existing tile
+    if(!isTileSelected){
+    idOfTileBeingMoved = getTileTexture(x, y, layer);
+    rotationOfTileBeingMoved = getTileRotation(x, y, layer);
+    isTileSelected = true;
+    setTileTextureAndRotation(x, y, 0, layer);
+    }else{
+        setTileTextureAndRotation(x, y, idOfTileBeingMoved, layer, rotationOfTileBeingMoved);
+        idOfTileBeingMoved = -1;
+        isTileSelected = false;
     }
+    //Click on another tile and replace it with coursor texture
+    //Coursor is now mode 2
 }
 
 void Grid::setCoursorMode(int mode){

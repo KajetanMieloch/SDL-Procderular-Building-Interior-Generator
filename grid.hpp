@@ -67,7 +67,10 @@ public:
     void markTileAsReadyToBeLinked(int x, int y, int layer);
     
     void rotateTile(int x, int y, int layer);
-    void markTileAsReadyToBeMoved(int x, int y, int layer);
+    void moveTile(int x, int y, int layer);
+    int idOfTileBeingMoved = -1;
+    int rotationOfTileBeingMoved = 0;
+    bool isTileSelected = false;
 
     void setCoursorMode(int mode);
     int getCoursorMode() { return coursorMode; }
