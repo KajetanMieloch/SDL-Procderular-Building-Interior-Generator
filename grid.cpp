@@ -81,9 +81,11 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     // Initialize first layer grid and rotation
     firstLayer.grid = new int*[gridSize];
     firstLayer.rotate = new int*[gridSize];
+    firstLayer.readyToBeLinked = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         firstLayer.grid[i] = new int[gridSize];
         firstLayer.rotate[i] = new int[gridSize];
+        firstLayer.readyToBeLinked[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             firstLayer.grid[i][j] = 0;
             firstLayer.rotate[i][j] = 0;
@@ -94,9 +96,11 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     // Initialize second layer grid and rotation
     secondLayer.grid = new int*[gridSize];
     secondLayer.rotate = new int*[gridSize];
+    secondLayer.readyToBeLinked = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         secondLayer.grid[i] = new int[gridSize];
         secondLayer.rotate[i] = new int[gridSize];
+        secondLayer.readyToBeLinked[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             secondLayer.grid[i][j] = 0;
             secondLayer.rotate[i][j] = 0;
@@ -107,9 +111,11 @@ Grid::Grid(SDL_Renderer* renderer, int tileSize, int gridSize, HUD* hud) {
     // Initialize third layer grid and rotation
     thirdLayer.grid = new int*[gridSize];
     thirdLayer.rotate = new int*[gridSize];
+    thirdLayer.readyToBeLinked = new bool*[gridSize];
     for (int i = 0; i < gridSize; i++) {
         thirdLayer.grid[i] = new int[gridSize];
         thirdLayer.rotate[i] = new int[gridSize];
+        thirdLayer.readyToBeLinked[i] = new bool[gridSize];
         for (int j = 0; j < gridSize; j++) {
             thirdLayer.grid[i][j] = 0;
             thirdLayer.rotate[i][j] = 0;

@@ -118,6 +118,8 @@ private:
     int gridSize;
     int visibleSize;
     int** grid;
+    int** rotate;
+    bool** readyToBeLinked;
 };
 
 #endif
