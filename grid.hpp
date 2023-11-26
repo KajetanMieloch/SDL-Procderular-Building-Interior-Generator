@@ -9,6 +9,7 @@
 #include "hud.hpp"
 #include <algorithm>
 #include <tuple>
+#include <vector>
 
 class FirstLayer {
 public:
@@ -64,7 +65,12 @@ public:
     void generateLevel(SDL_Renderer* renderer);
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
     int getRotationOfBorderingTileWithId(int x, int y, int id, int layer);
+    
     void markTileAsReadyToBeLinked(int x, int y, int layer);
+    void confirmLinking();
+    std::vector<std::vector<std::tuple<int, int, int>>> linkedTiles;
+    std::tuple<int, int, int> tile;
+    int linkedGroupCounter = 0;
     
     void rotateTile(int x, int y, int layer);
     void moveTile(int x, int y, int layer);

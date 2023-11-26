@@ -244,17 +244,47 @@ void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch (layer) {
             case 1:
-                firstLayer.readyToBeLinked[x][y] = true;
+                firstLayer.readyToBeLinked[x][y] = !firstLayer.readyToBeLinked[x][y];
                 break;
             case 2:
-                secondLayer.readyToBeLinked[x][y] = true;
+                secondLayer.readyToBeLinked[x][y] = !secondLayer.readyToBeLinked[x][y];
                 break;
             case 3:
-                thirdLayer.readyToBeLinked[x][y] = true;
+                thirdLayer.readyToBeLinked[x][y] = !thirdLayer.readyToBeLinked[x][y];
             default:
                 break;
         }
     }
+}
+
+void Grid::confirmLinking(){
+    // Create a new group
+    linkedTiles.push_back(std::vector<std::tuple<int, int, int>>());
+
+    //All tiles that are ready to be linked are now linked set all to false
+    for(int i = 0; i < gridSize; i++){
+        for(int j = 0; j < gridSize; j++){
+            if(firstLayer.readyToBeLinked[i][j]){
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+                linkedTiles[linkedGroupCounter].push_back(tile);
+                firstLayer.readyToBeLinked[i][j] = false;
+            }
+            if(secondLayer.readyToBeLinked[i][j]){
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+                linkedTiles[linkedGroupCounter].push_back(tile);
+                secondLayer.readyToBeLinked[i][j] = false;
+            }
+            if(thirdLayer.readyToBeLinked[i][j]){
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+                linkedTiles[linkedGroupCounter].push_back(tile);
+                thirdLayer.readyToBeLinked[i][j] = false;
+            }
+        }
+    }
+    linkedGroupCounter++;
+    std::cout<<"Linked tiles: "<<linkedTiles.size()<<std::endl;
+    std::cout<<"Linked group: "<<linkedGroupCounter<<std::endl;
+    std::cout<<"Linked group size: "<<linkedTiles[linkedGroupCounter - 1].size()<<std::endl;
 }
 
 void Grid::moveTile(int x, int y, int layer){

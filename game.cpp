@@ -156,6 +156,14 @@ void Game::handleEvents() {
                     grid->setCoursorMode(9);
                     break;
 
+                case SDLK_l:
+                    grid->setCoursorMode(5);
+                    break;
+                
+                case SDLK_c:
+                    grid->confirmLinking();
+                    break;
+
                 default:
                     break;
             }
@@ -190,6 +198,10 @@ void Game::handleEvents() {
             
             case 9:
                 grid->cloneTile(adjustedX, adjustedY, hud->getRenderLayer());
+                break;
+            
+            case 5:
+                grid->markTileAsReadyToBeLinked(adjustedX, adjustedY, hud->getRenderLayer());
                 break;
 
             default:
