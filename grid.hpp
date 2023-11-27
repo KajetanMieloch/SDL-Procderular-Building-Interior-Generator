@@ -68,8 +68,11 @@ public:
     
     void markTileAsReadyToBeLinked(int x, int y, int layer);
     void confirmLinking();
-    std::vector<std::vector<std::tuple<int, int, int>>> linkedTiles;
+    void confirmTemporarlyLinking();
+    //std::vector<std::vector<std::tuple<int, int, int>>> linkedTiles;
+    std::vector<std::tuple<int, int, int>> temporarlyLinkedTiles;
     std::tuple<int, int, int> tile;
+
     int linkedGroupCounter = 0;
     
     void rotateTile(int x, int y, int layer);

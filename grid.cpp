@@ -257,34 +257,61 @@ void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
     }
 }
 
-void Grid::confirmLinking(){
+void Grid::confirmTemporarlyLinking(){
     // Create a new group
-    linkedTiles.push_back(std::vector<std::tuple<int, int, int>>());
+    temporarlyLinkedTiles.push_back(std::make_tuple(0, 0, 0));
 
     //All tiles that are ready to be linked are now linked set all to false
     for(int i = 0; i < gridSize; i++){
         for(int j = 0; j < gridSize; j++){
             if(firstLayer.readyToBeLinked[i][j]){
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
-                linkedTiles[linkedGroupCounter].push_back(tile);
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
+                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
                 firstLayer.readyToBeLinked[i][j] = false;
             }
-            if(secondLayer.readyToBeLinked[i][j]){
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
-                linkedTiles[linkedGroupCounter].push_back(tile);
+            if(secondLayer.readyToBeLinked[i][j]){ 
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
+                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
                 secondLayer.readyToBeLinked[i][j] = false;
             }
             if(thirdLayer.readyToBeLinked[i][j]){
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
-                linkedTiles[linkedGroupCounter].push_back(tile);
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
+                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
                 thirdLayer.readyToBeLinked[i][j] = false;
             }
         }
     }
-    linkedGroupCounter++;
-    std::cout<<"Linked tiles: "<<linkedTiles.size()<<std::endl;
-    std::cout<<"Linked group: "<<linkedGroupCounter<<std::endl;
-    std::cout<<"Linked group size: "<<linkedTiles[linkedGroupCounter - 1].size()<<std::endl;
+    std::cout<<"Linked tiles: "<<temporarlyLinkedTiles.size()<<std::endl;
+}
+
+void Grid::confirmLinking(){
+    // // Create a new group
+    // linkedTiles.push_back(std::vector<std::tuple<int, int, int>>());
+
+    // //All tiles that are ready to be linked are now linked set all to false
+    // for(int i = 0; i < gridSize; i++){
+    //     for(int j = 0; j < gridSize; j++){
+    //         if(firstLayer.readyToBeLinked[i][j]){
+    //             std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+    //             linkedTiles[linkedGroupCounter].push_back(tile);
+    //             firstLayer.readyToBeLinked[i][j] = false;
+    //         }
+    //         if(secondLayer.readyToBeLinked[i][j]){ 
+    //             std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+    //             linkedTiles[linkedGroupCounter].push_back(tile);
+    //             secondLayer.readyToBeLinked[i][j] = false;
+    //         }
+    //         if(thirdLayer.readyToBeLinked[i][j]){
+    //             std::tuple<int, int, int> tile = std::make_tuple(i, j, linkedGroupCounter);
+    //             linkedTiles[linkedGroupCounter].push_back(tile);
+    //             thirdLayer.readyToBeLinked[i][j] = false;
+    //         }
+    //     }
+    // }
+    // linkedGroupCounter++;
+    // std::cout<<"Linked tiles: "<<linkedTiles.size()<<std::endl;
+    // std::cout<<"Linked group: "<<linkedGroupCounter<<std::endl;
+    // std::cout<<"Linked group size: "<<linkedTiles[linkedGroupCounter - 1].size()<<std::endl;
 }
 
 void Grid::moveTile(int x, int y, int layer){

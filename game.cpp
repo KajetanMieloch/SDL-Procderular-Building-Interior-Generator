@@ -160,6 +160,10 @@ void Game::handleEvents() {
                     grid->setCoursorMode(5);
                     break;
                 
+                case SDLK_t:
+                    grid->confirmTemporarlyLinking();
+                    break;
+                
                 case SDLK_c:
                     grid->confirmLinking();
                     break;
