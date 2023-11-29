@@ -265,23 +265,26 @@ void Grid::confirmTemporarlyLinking(){
     for(int i = 0; i < gridSize; i++){
         for(int j = 0; j < gridSize; j++){
             if(firstLayer.readyToBeLinked[i][j]){
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
-                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, getTileRotation(i, j, 1));
+                temporarlyLinkedTiles.push_back(tile);
                 firstLayer.readyToBeLinked[i][j] = false;
             }
             if(secondLayer.readyToBeLinked[i][j]){ 
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
-                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, getTileRotation(i, j, 2));
+                temporarlyLinkedTiles.push_back(tile);
                 secondLayer.readyToBeLinked[i][j] = false;
             }
             if(thirdLayer.readyToBeLinked[i][j]){
-                std::tuple<int, int, int> tile = std::make_tuple(i, j, temporarlyLinkedTiles.size() - 1);
-                temporarlyLinkedTiles[temporarlyLinkedTiles.size() - 1] = tile;
+                std::tuple<int, int, int> tile = std::make_tuple(i, j, getTileRotation(i, j, 3));
+                temporarlyLinkedTiles.push_back(tile);
                 thirdLayer.readyToBeLinked[i][j] = false;
             }
         }
     }
-    std::cout<<"Linked tiles: "<<temporarlyLinkedTiles.size()<<std::endl;
+    for(const auto& tile : temporarlyLinkedTiles){
+        std::cout<<"X: "<<std::get<0>(tile)<<" Y: "<<std::get<1>(tile)<<" Rotation: "<<std::get<2>(tile)<<std::endl;
+    }
+    temporarlyLinkedTiles.clear();
 }
 
 void Grid::confirmLinking(){
