@@ -259,7 +259,7 @@ void Grid::markTileAsReadyToBeLinked(int x, int y, int layer){
 
 void Grid::confirmTemporarlyLinking(){
     // Create a new group
-    temporarlyLinkedTiles.push_back(std::make_tuple(0, 0, 0));
+    temporarlyLinkedTiles.clear();
 
     //All tiles that are ready to be linked are now linked set all to false
     for(int i = 0; i < gridSize; i++){
@@ -281,10 +281,6 @@ void Grid::confirmTemporarlyLinking(){
             }
         }
     }
-    for(const auto& tile : temporarlyLinkedTiles){
-        std::cout<<"X: "<<std::get<0>(tile)<<" Y: "<<std::get<1>(tile)<<" Rotation: "<<std::get<2>(tile)<<std::endl;
-    }
-    temporarlyLinkedTiles.clear();
 }
 
 void Grid::confirmLinking(){
@@ -318,19 +314,43 @@ void Grid::confirmLinking(){
 }
 
 void Grid::moveTile(int x, int y, int layer){
-    //Delete existing tile
+    
     if(!isTileSelected){
-    idOfTileBeingMoved = getTileTexture(x, y, layer);
-    rotationOfTileBeingMoved = getTileRotation(x, y, layer);
-    isTileSelected = true;
-    setTileTextureAndRotation(x, y, 0, layer);
-    }else{
-        setTileTextureAndRotation(x, y, idOfTileBeingMoved, layer, rotationOfTileBeingMoved);
-        idOfTileBeingMoved = -1;
-        isTileSelected = false;
+        tileClicked = std::make_tuple(x, y, getTileRotation(x, y, layer));
     }
-    //Click on another tile and replace it with coursor texture
-    //Coursor is now mode 2
+    //If tile clicked is in temporarly linked tiles then move all temporarly linked tiles
+    if(std::find(temporarlyLinkedTiles.begin(), temporarlyLinkedTiles.end(), tileClicked) != temporarlyLinkedTiles.end()){
+        if(!isTileSelected){
+            for(const auto& tile : temporarlyLinkedTiles){
+                setTileTextureAndRotation(std::get<0>(tile), std::get<1>(tile), 0, layer);
+            }
+            isTileSelected = true;
+        } else {
+            for(const auto& tile : temporarlyLinkedTiles){
+                //Now relativly to x and y coordination alter tuple tile then on changed coordinates setTileTextureAndRotation
+                int newX = std::get<0>(tile) + x - std::get<0>(tileClicked);
+                int newY = std::get<1>(tile) + y - std::get<1>(tileClicked);
+                setTileTextureAndRotation(newX, newY, 2, layer);
+
+            }
+            isTileSelected = false;
+        }
+    }else{
+    
+        //Delete existing tile
+        if(!isTileSelected){
+        idOfTileBeingMoved = getTileTexture(x, y, layer);
+        rotationOfTileBeingMoved = getTileRotation(x, y, layer);
+        isTileSelected = true;
+        setTileTextureAndRotation(x, y, 0, layer);
+        }else{
+            setTileTextureAndRotation(x, y, idOfTileBeingMoved, layer, rotationOfTileBeingMoved);
+            idOfTileBeingMoved = -1;
+            isTileSelected = false;
+        }
+        //Click on another tile and replace it with coursor texture
+        //Coursor is now mode 2
+    }
 }
 
 void Grid::cloneTile(int x, int y, int layer){
@@ -590,7 +610,6 @@ auto [doorX, doorY, doorRot] = generateRoomWithAllVariations(
     roomSizeGenerator(gen),  // Generate a random value between 5 and 30
     roomDistribution(gen)    // Generate a random value between 1 and 2
 );
-std::cout<<doorX<<std::endl;
 generateKitchen(
     renderer,
     roomSizeGenerator(gen) * 1.8,

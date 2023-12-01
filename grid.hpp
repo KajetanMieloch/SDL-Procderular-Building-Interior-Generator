@@ -77,9 +77,10 @@ public:
     
     void rotateTile(int x, int y, int layer);
     void moveTile(int x, int y, int layer);
-    int idOfTileBeingMoved = -1;
-    int rotationOfTileBeingMoved = 0;
+    int idOfTileBeingMoved;
+    int rotationOfTileBeingMoved;
     bool isTileSelected = false;
+    std::tuple<int, int, int> tileClicked;
 
     void cloneTile(int x, int y, int layer);
     void setIsTileCloned(bool isTileCloned) { this->isTileCloned = isTileCloned; }
