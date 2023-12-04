@@ -72,6 +72,7 @@ public:
     //std::vector<std::vector<std::tuple<int, int, int>>> linkedTiles;
     std::vector<std::tuple<int, int, int>> temporarlyLinkedTiles;
     std::tuple<int, int, int> tile;
+    std::vector<int> idOfLinkedTiles;
 
     int linkedGroupCounter = 0;
     

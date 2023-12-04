@@ -322,16 +322,20 @@ void Grid::moveTile(int x, int y, int layer){
     if(std::find(temporarlyLinkedTiles.begin(), temporarlyLinkedTiles.end(), tileClicked) != temporarlyLinkedTiles.end()){
         if(!isTileSelected){
             for(const auto& tile : temporarlyLinkedTiles){
+                int idOfTileBeingMoved = getTileTexture(std::get<0>(tile), std::get<1>(tile), layer);
+                idOfLinkedTiles.push_back(idOfTileBeingMoved);
                 setTileTextureAndRotation(std::get<0>(tile), std::get<1>(tile), 0, layer);
             }
             isTileSelected = true;
         } else {
+            int i = 0;
             for(const auto& tile : temporarlyLinkedTiles){
                 //Now relativly to x and y coordination alter tuple tile then on changed coordinates setTileTextureAndRotation
                 int newX = std::get<0>(tile) + x - std::get<0>(tileClicked);
                 int newY = std::get<1>(tile) + y - std::get<1>(tileClicked);
-                setTileTextureAndRotation(newX, newY, 2, layer);
-
+                //For every tile in linked group get its id and rotation and set it on new coordinates
+                setTileTextureAndRotation(newX, newY, idOfLinkedTiles[i], layer);
+                i++;
             }
             isTileSelected = false;
         }
