@@ -6,14 +6,10 @@ Equipment::Equipment(SDL_Renderer* renderer, SDL_Window* window) {
     // Other initialization code...
 }
 
-Equipment::~Equipment() {
-    // Clean up code...
-}
-
 void Equipment::init() {
 
     //Textures
-bed2Tex = LoadTexture("res/textures/bed2.png");
+    bed2Tex = LoadTexture("res/textures/bed2.png");
     bedTex = LoadTexture("res/textures/bed.png");
     blueBrickTex = LoadTexture("res/textures/blue_brick.png");
     bombTex = LoadTexture("res/textures/bomb.png");
@@ -53,6 +49,91 @@ bed2Tex = LoadTexture("res/textures/bed2.png");
     n2Tex = LoadTexture("res/textures/2.png");
     n3Tex = LoadTexture("res/textures/3.png");
     n4Tex = LoadTexture("res/textures/4.png");
+}
+
+Equipment::~Equipment(){
+    SDL_DestroyTexture(bed2Tex);
+    SDL_DestroyTexture(bedTex);
+    SDL_DestroyTexture(blueBrickTex);
+    SDL_DestroyTexture(bombTex);
+    SDL_DestroyTexture(chair2Tex);
+    SDL_DestroyTexture(chairTex);
+    SDL_DestroyTexture(cornerTex);
+    SDL_DestroyTexture(doorTex);
+    SDL_DestroyTexture(electricStoveTex);
+    SDL_DestroyTexture(fridgeClosedTex);
+    SDL_DestroyTexture(fridgeOpenTex);
+    SDL_DestroyTexture(gasStoveOnTex);
+    SDL_DestroyTexture(gasStoveTex);
+    SDL_DestroyTexture(meteoriteBrickTex);
+    SDL_DestroyTexture(pearlstoneBrickTex);
+    SDL_DestroyTexture(plateDirtyMuchTex);
+    SDL_DestroyTexture(plateDirtyTex);
+    SDL_DestroyTexture(plateMeatTex);
+    SDL_DestroyTexture(platePotatoTex);
+    SDL_DestroyTexture(plateTomatoLowTex);
+    SDL_DestroyTexture(plateTomatoTex);
+    SDL_DestroyTexture(plateTex);
+    SDL_DestroyTexture(platinumBrickTex);
+    SDL_DestroyTexture(potBoilingTex);
+    SDL_DestroyTexture(potTomatoTex);
+    SDL_DestroyTexture(potTex);
+    SDL_DestroyTexture(potWaterTex);
+    SDL_DestroyTexture(redBrickTex);
+    SDL_DestroyTexture(sinkDirtyTex);
+    SDL_DestroyTexture(sinkTex);
+    SDL_DestroyTexture(snowBrickTex);
+    SDL_DestroyTexture(tableTex);
+    SDL_DestroyTexture(tableWhiteTex);
+    SDL_DestroyTexture(transparentTex);
+    SDL_DestroyTexture(wallTex);
+    SDL_DestroyTexture(windowTex);
+    SDL_DestroyTexture(n1Tex);
+    SDL_DestroyTexture(n2Tex);
+    SDL_DestroyTexture(n3Tex);
+    SDL_DestroyTexture(n4Tex);
+
+    bed2Tex = nullptr;
+    bedTex = nullptr;
+    blueBrickTex = nullptr;
+    bombTex = nullptr;
+    chair2Tex = nullptr;
+    chairTex = nullptr;
+    cornerTex = nullptr;
+    doorTex = nullptr;
+    electricStoveTex = nullptr;
+    fridgeClosedTex = nullptr;
+    fridgeOpenTex = nullptr;
+    gasStoveOnTex = nullptr;
+    gasStoveTex = nullptr;
+    meteoriteBrickTex = nullptr;
+    pearlstoneBrickTex = nullptr;
+    plateDirtyMuchTex = nullptr;
+    plateDirtyTex = nullptr;
+    plateMeatTex = nullptr;
+    platePotatoTex = nullptr;
+    plateTomatoLowTex = nullptr;
+    plateTomatoTex = nullptr;
+    plateTex = nullptr;
+    platinumBrickTex = nullptr;
+    potBoilingTex = nullptr;
+    potTomatoTex = nullptr;
+    potTex = nullptr;
+    potWaterTex = nullptr;
+    redBrickTex = nullptr;
+    sinkDirtyTex = nullptr;
+    sinkTex = nullptr;
+    snowBrickTex = nullptr;
+    tableTex = nullptr;
+    tableWhiteTex = nullptr;
+    transparentTex = nullptr;
+    wallTex = nullptr;
+    windowTex = nullptr;
+    n1Tex = nullptr;
+    n2Tex = nullptr;
+    n3Tex = nullptr;
+    n4Tex = nullptr;
+
 }
 
 SDL_Texture* Equipment::LoadTexture(const std::string& filePath) {

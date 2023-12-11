@@ -17,6 +17,12 @@ Menu::Menu(SDL_Renderer* renderer, TTF_Font* font) : renderer(renderer), font(fo
 
 Menu::~Menu() {
     // Clean up any resources if needed
+    SDL_DestroyRenderer(renderer);
+    TTF_CloseFont(font);
+    TTF_Quit();
+    SDL_Quit();
+    renderer = nullptr;
+    font = nullptr;
 }
 
 

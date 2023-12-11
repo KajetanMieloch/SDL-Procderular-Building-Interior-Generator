@@ -9,7 +9,23 @@
 bool rectangleGenerated = false;
 
 Game::Game() {}
-Game::~Game() {}
+Game::~Game() {
+    delete grid;
+    delete hud;
+    delete equipment;
+
+    grid = nullptr;
+    hud = nullptr;
+    equipment = nullptr;
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_CloseFont(font);
+    TTF_Quit();
+    window = nullptr;
+    renderer = nullptr;
+    SDL_Quit();
+}
 
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {

@@ -9,7 +9,14 @@ HUD::HUD(SDL_Renderer* renderer, SDL_Window* window) {
 }
 
 HUD::~HUD() {
-    // Clean up code...
+    // Clean up any resources if needed
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_CloseFont(font);
+    TTF_Quit();
+    window = nullptr;
+    renderer = nullptr;
+    font = nullptr;
 }
 
 void HUD::init() {

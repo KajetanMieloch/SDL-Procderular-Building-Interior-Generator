@@ -130,6 +130,123 @@ Grid::~Grid() {
         delete[] grid[i];
     }
     delete[] grid;
+    SDL_DestroyTexture(bed2Tex);
+    SDL_DestroyTexture(bedTex);
+    SDL_DestroyTexture(blueBrickTex);
+    SDL_DestroyTexture(bombTex);
+    SDL_DestroyTexture(chair2Tex);
+    SDL_DestroyTexture(chairTex);
+    SDL_DestroyTexture(cornerTex);
+    SDL_DestroyTexture(doorTex);
+    SDL_DestroyTexture(electricStoveTex);   
+    SDL_DestroyTexture(fridgeClosedTex);
+    SDL_DestroyTexture(fridgeOpenTex);  
+    SDL_DestroyTexture(gasStoveOnTex);
+    SDL_DestroyTexture(gasStoveTex);
+    SDL_DestroyTexture(meteoriteBrickTex);
+    SDL_DestroyTexture(pearlstoneBrickTex);
+    SDL_DestroyTexture(plateDirtyMuchTex);
+    SDL_DestroyTexture(plateDirtyTex);
+    SDL_DestroyTexture(plateMeatTex);
+    SDL_DestroyTexture(platePotatoTex);
+    SDL_DestroyTexture(plateTomatoLowTex);
+    SDL_DestroyTexture(plateTomatoTex);
+    SDL_DestroyTexture(plateTex);
+    SDL_DestroyTexture(platinumBrickTex);
+    SDL_DestroyTexture(potBoilingTex);
+    SDL_DestroyTexture(potTomatoTex);
+    SDL_DestroyTexture(potTex);
+    SDL_DestroyTexture(potWaterTex);
+    SDL_DestroyTexture(redBrickTex);
+    SDL_DestroyTexture(sinkDirtyTex);
+    SDL_DestroyTexture(sinkTex);
+    SDL_DestroyTexture(snowBrickTex);
+    SDL_DestroyTexture(tableTex);
+    SDL_DestroyTexture(tableWhiteTex);
+    SDL_DestroyTexture(transparentTex);
+    SDL_DestroyTexture(wallTex);
+    SDL_DestroyTexture(windowTex);
+    SDL_DestroyTexture(n1Tex);
+    SDL_DestroyTexture(n2Tex);
+    SDL_DestroyTexture(n3Tex);
+    SDL_DestroyTexture(n4Tex);
+
+    bed2Tex = nullptr;
+    bedTex = nullptr;
+    blueBrickTex = nullptr;
+    bombTex = nullptr;
+    chair2Tex = nullptr;
+    chairTex = nullptr;
+    cornerTex = nullptr;
+    doorTex = nullptr;
+    electricStoveTex = nullptr;
+    fridgeClosedTex = nullptr;
+    fridgeOpenTex = nullptr;
+    gasStoveOnTex = nullptr;
+    gasStoveTex = nullptr;
+    meteoriteBrickTex = nullptr;
+    pearlstoneBrickTex = nullptr;
+    plateDirtyMuchTex = nullptr;
+    plateDirtyTex = nullptr;
+    plateMeatTex = nullptr;
+    platePotatoTex = nullptr;
+    plateTomatoLowTex = nullptr;
+    plateTomatoTex = nullptr;
+    plateTex = nullptr;
+    platinumBrickTex = nullptr;
+    potBoilingTex = nullptr;
+    potTomatoTex = nullptr;
+    potTex = nullptr;
+    potWaterTex = nullptr;
+    redBrickTex = nullptr;
+    sinkDirtyTex = nullptr;
+    sinkTex = nullptr;
+    snowBrickTex = nullptr;
+    tableTex = nullptr;
+    tableWhiteTex = nullptr;
+    transparentTex = nullptr;
+    wallTex = nullptr;
+    windowTex = nullptr;
+    n1Tex = nullptr;
+    n2Tex = nullptr;
+    n3Tex = nullptr;
+    n4Tex = nullptr;
+
+    // Delete first layer grid and rotation
+    for (int i = 0; i < gridSize; i++) {
+        delete[] firstLayer.grid[i];
+        delete[] firstLayer.rotate[i];
+        delete[] firstLayer.readyToBeLinked[i];
+    }
+    delete[] firstLayer.grid;
+    delete[] firstLayer.rotate;
+    delete[] firstLayer.readyToBeLinked;
+
+    // Delete second layer grid and rotation
+    for (int i = 0; i < gridSize; i++) {
+        delete[] secondLayer.grid[i];
+        delete[] secondLayer.rotate[i];
+        delete[] secondLayer.readyToBeLinked[i];
+    }
+    delete[] secondLayer.grid;
+    delete[] secondLayer.rotate;
+    delete[] secondLayer.readyToBeLinked;
+
+    // Delete third layer grid and rotation
+    for (int i = 0; i < gridSize; i++) {
+        delete[] thirdLayer.grid[i];
+        delete[] thirdLayer.rotate[i];
+        delete[] thirdLayer.readyToBeLinked[i];
+    }
+    delete[] thirdLayer.grid;
+    delete[] thirdLayer.rotate;
+    delete[] thirdLayer.readyToBeLinked;
+
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    window = nullptr;
+    renderer = nullptr;
+
 }
 
 
@@ -358,13 +475,28 @@ void Grid::moveTile(int x, int y, int layer){
 }
 
 void Grid::cloneTile(int x, int y, int layer){
-    //Delete existing tile
-    if(!isTileCloned){
-    idOfTileBeingCloned = getTileTexture(x, y, layer);
-    rotationOfTileBeingCloned = getTileRotation(x, y, layer);
-    isTileCloned = true;
-    }else{
-        setTileTextureAndRotation(x, y, idOfTileBeingCloned, layer, rotationOfTileBeingCloned);
+    if(std::find(temporarlyLinkedTiles.begin(), temporarlyLinkedTiles.end(), tileClicked) != temporarlyLinkedTiles.end()){
+        if(!isTileCloned){
+            for(const auto& tile : temporarlyLinkedTiles){
+                int idOfTileBeingCloned = getTileTexture(std::get<0>(tile), std::get<1>(tile), layer);
+                int rotationOfTileBeingCloned = getTileRotation(std::get<0>(tile), std::get<1>(tile), layer);
+                setTileTextureAndRotation(std::get<0>(tile), std::get<1>(tile), idOfTileBeingCloned, layer, rotationOfTileBeingCloned);
+            }
+            isTileCloned = true;
+        } else {
+            for(const auto& tile : temporarlyLinkedTiles){
+                setTileTextureAndRotation(std::get<0>(tile), std::get<1>(tile), 0, layer);
+            }
+            isTileCloned = false;
+        }
+    }   else{
+        if(!isTileCloned){
+        idOfTileBeingCloned = getTileTexture(x, y, layer);
+        rotationOfTileBeingCloned = getTileRotation(x, y, layer);
+        isTileCloned = true;
+        }else{
+            setTileTextureAndRotation(x, y, idOfTileBeingCloned, layer, rotationOfTileBeingCloned);
+        }
     }
     //Click on another tile and replace it with coursor texture
     //Coursor is now mode 2
