@@ -1019,7 +1019,7 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
 }
 #include <fstream>
 
-void Grid::saveFirstLayerToFile(const std::string& filename, int** layer) {
+void Grid::saveFirstLayerToFile(const std::string& filename, FirstLayer layer) {
     std::ofstream file(filename);
 
     // Write the contents of the grid to the file
@@ -1042,8 +1042,31 @@ void Grid::saveFirstLayerToFile(const std::string& filename, int** layer) {
     file.close();
 }
 
+void Grid::loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer) {
+    std::ifstream file(filename);
+
+    // Read the contents of the grid from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.grid[i][j];
+        }
+    }
+
+    // Read the contents of the rotate from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.rotate[i][j];
+        }
+    }
+
+    file.close();
+}
 
 
 void Grid::saveAllLayers() {
-    saveFirstLayerToFile("layer1.txt", firstLayer.grid);
+    saveFirstLayerToFile("layer1.txt", firstLayer);
+}
+
+void Grid::loadAllLayers() {
+    loadFirstLayerFromFile("layer1.txt", firstLayer);
 }

@@ -91,7 +91,9 @@ public:
 
     void setCoursorMode(int mode);
     int getCoursorMode() { return coursorMode; }
-    void saveFirstLayerToFile(const std::string& filename, int** layer);
+    void saveFirstLayerToFile(const std::string& filename, FirstLayer layer);
+    void loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer);
+    void loadAllLayers();
     void saveAllLayers();
 
     int coursorMode = 0;
