@@ -1042,6 +1042,46 @@ void Grid::saveFirstLayerToFile(const std::string& filename, FirstLayer layer) {
     file.close();
 }
 
+void Grid::saveSecondLayerToFile(const std::string& filename, SecondLayer layer) {
+    std::ofstream file(filename);
+
+    // Write the contents of the grid to the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file << layer.grid[i][j] << " ";
+        }
+        file << "\n";
+    }
+
+    // Write the contents of the rotate to the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file << layer.rotate[i][j] << " ";
+        }
+        file << "\n";
+    }
+}
+
+void Grid::saveThirdLayerToFile(const std::string& filename, ThirdLayer layer) {
+    std::ofstream file(filename);
+
+    // Write the contents of the grid to the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file << layer.grid[i][j] << " ";
+        }
+        file << "\n";
+    }
+
+    // Write the contents of the rotate to the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file << layer.rotate[i][j] << " ";
+        }
+        file << "\n";
+    }
+}
+
 void Grid::loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer) {
     std::ifstream file(filename);
 
@@ -1062,11 +1102,55 @@ void Grid::loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer
     file.close();
 }
 
+void Grid::loadSecondLayerFromFile(const std::string& filename, SecondLayer& layer){
+        std::ifstream file(filename);
+
+    // Read the contents of the grid from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.grid[i][j];
+        }
+    }
+
+    // Read the contents of the rotate from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.rotate[i][j];
+        }
+    }
+
+    file.close();
+}
+
+void Grid::loadThirdLayerFromFile(const std::string& filename, ThirdLayer& layer){
+        std::ifstream file(filename);
+
+    // Read the contents of the grid from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.grid[i][j];
+        }
+    }
+
+    // Read the contents of the rotate from the file
+    for (int i = 0; i < gridSize; i++) {
+        for (int j = 0; j < gridSize; j++) {
+            file >> layer.rotate[i][j];
+        }
+    }
+
+    file.close();
+}
 
 void Grid::saveAllLayers() {
     saveFirstLayerToFile("layer1.txt", firstLayer);
+    saveSecondLayerToFile("layer2.txt", secondLayer);
+    saveThirdLayerToFile("layer3.txt", thirdLayer);
+
 }
 
 void Grid::loadAllLayers() {
     loadFirstLayerFromFile("layer1.txt", firstLayer);
+    loadSecondLayerFromFile("layer2.txt", secondLayer);
+    loadThirdLayerFromFile("layer3.txt", thirdLayer);
 }

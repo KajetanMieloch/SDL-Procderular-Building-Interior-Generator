@@ -92,7 +92,12 @@ public:
     void setCoursorMode(int mode);
     int getCoursorMode() { return coursorMode; }
     void saveFirstLayerToFile(const std::string& filename, FirstLayer layer);
+    void saveSecondLayerToFile(const std::string& filename, SecondLayer layer);
+    void saveThirdLayerToFile(const std::string& filename, ThirdLayer layer);
     void loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer);
+    void loadSecondLayerFromFile(const std::string& filename, SecondLayer& layer);
+    void loadThirdLayerFromFile(const std::string& filename, ThirdLayer& layer);
+    
     void loadAllLayers();
     void saveAllLayers();
 
