@@ -1,60 +1,47 @@
+#include "game.hpp"
+#include "menu.hpp"
 #include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 
-int main(int argc, char* argv[]) {
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-        std::cerr << "SDL initialization failed: " << SDL_GetError() << std::endl;
-        return 1;
-    }
+Game* game = NULL;
+Menu* mainMenu = NULL;
+bool inMenu = true;  // Initially, we start in the menu
+SDL_Event event;
 
-    SDL_Window* window = SDL_CreateWindow("Hello World!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+int main(int argc, const char* argv[]) {
+    SDL_Init(SDL_INIT_EVERYTHING);
 
-    if (TTF_Init() < 0) {
-        std::cerr << "SDL_ttf initialization failed: " << TTF_GetError() << std::endl;
-        return 1;
-    }
+    game = new Game();
+    game->init("Interior generator", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, true);
 
-    TTF_Font* font = TTF_OpenFont("res/Arial.ttf", 24);
 
-    if (!font) {
-        std::cerr << "Failed to load font: " << TTF_GetError() << std::endl;
-        return 1;
-    }
+    mainMenu = new Menu(game->getRenderer(), game->getFont());
 
-    SDL_Color textColor = {255, 0, 0, 255};
-    SDL_Surface* textSurface = TTF_RenderText_Solid(font, "Hello, World!", textColor);
-    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-
-    SDL_Event event;
-    bool quit = false;
-
-    while (!quit) {
+    while (game->getRunning()) {
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
+            if (inMenu) {
+                mainMenu->handleEvents(event);
+                mainMenu->render();
+                if (!mainMenu->isMenuRunning()) {
+                    inMenu = false;  // Exit the menu
+                    game->setRunning(true);  // Start the game
+                }
+                if (mainMenu->quitGame()) {
+                    game->setRunning(false);  // Quit the game
+                }
+            } else {
+                game->run();
+                game->handleEvents();
+                game->update();
+                game->render();
             }
         }
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Set background color to black
-        SDL_RenderClear(renderer);
-
-        // Draw the "Hello, World!" text
-        SDL_RenderCopy(renderer, textTexture, NULL, NULL);
-
-        // Update the screen
-        SDL_RenderPresent(renderer);
     }
 
-    SDL_DestroyTexture(textTexture);
-    SDL_FreeSurface(textSurface);
-    TTF_CloseFont(font);
-    TTF_Quit();
-
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    game->clean();
     SDL_Quit();
+
+    delete game;
+    delete mainMenu;
 
     return 0;
 }

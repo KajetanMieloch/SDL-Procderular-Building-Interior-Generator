@@ -1,0 +1,32 @@
+{
+    "textures": {
+        "first layer":[
+            {
+                "id": 1,
+                "path": "./res/textures/red_brick.png"
+            },
+            {
+                "id": 2,
+                "path": "./res/textures/blue_brick.png"
+            }
+        ],
+        "second layer":[
+            {
+                "id":101,
+                "path": "./res/textures/bomb.png"
+            },
+            {
+                "id":102,
+                "path": "./res/textures/corner.png"
+            },
+            {
+                "id":103,
+                "path": "./res/textures/wall.png"
+            },
+            {
+                "id":104,
+                "path": "./res/textures/door.png"
+            }
+        ]
+    }
+}
