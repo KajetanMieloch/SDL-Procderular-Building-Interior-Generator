@@ -97,6 +97,7 @@ public:
     void loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer);
     void loadSecondLayerFromFile(const std::string& filename, SecondLayer& layer);
     void loadThirdLayerFromFile(const std::string& filename, ThirdLayer& layer);
+    void saveAsAllLayers();
     
     void loadAllLayers();
     void saveAllLayers();

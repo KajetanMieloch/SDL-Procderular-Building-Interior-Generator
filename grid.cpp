@@ -1154,3 +1154,73 @@ void Grid::loadAllLayers() {
     loadSecondLayerFromFile("layer2.txt", secondLayer);
     loadThirdLayerFromFile("layer3.txt", thirdLayer);
 }
+
+void Grid::saveAsAllLayers() {
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "TTF_Init: " << TTF_GetError();
+        exit(2);
+    }
+
+    // Create a window
+    SDL_Window* window = SDL_CreateWindow("Enter filename", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN);
+    if (window == nullptr) {
+        std::cerr << "Could not create window: " << SDL_GetError();
+        exit(2);
+    }
+
+    // Create a renderer
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderer == nullptr) {
+        std::cerr << "Could not create renderer: " << SDL_GetError();
+        exit(2);
+    }
+
+    // Load a font
+    TTF_Font* font = TTF_OpenFont("res/Arial.ttf", 24);
+    if (font == nullptr) {
+        std::cerr << "TTF_OpenFont: " << TTF_GetError();
+        exit(2);
+    }
+
+    // Render the text
+    SDL_Color color = {255, 255, 255};
+    SDL_Surface* surface = TTF_RenderText_Solid(font, "Enter filename:", color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    // Input text
+    std::string inputText = "";
+
+    // Main loop
+    bool running = true;
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            } else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
+                running = false;
+            } else if (event.type == SDL_TEXTINPUT) {
+                // Add new text to the input text
+                inputText += event.text.text;
+            }
+            // Handle other events...
+        }
+
+        // Render the text
+        SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+        SDL_RenderPresent(renderer);
+    }
+
+    // Clean up
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_Quit();
+
+    // Use the input text as the filename
+    std::cout << "Filename: " << inputText << std::endl;
+}

@@ -182,6 +182,10 @@ void Game::handleEvents() {
                     grid->loadAllLayers();
                     break;
 
+                case SDLK_y:
+                    grid->saveAsAllLayers();
+                    break;
+
                 default:
                     break;
             }
