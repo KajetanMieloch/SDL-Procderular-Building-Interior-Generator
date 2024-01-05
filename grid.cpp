@@ -1205,7 +1205,7 @@ void Grid::saveAsAllLayers() {
 
     bool running = true;
     while (running) {
-        handleEvents();
+        running = handleEvents();  // Modify the loop condition based on the events
         render();
     }
 
@@ -1220,22 +1220,23 @@ void Grid::saveAsAllLayers() {
     std::cout << "Filename: " << inputText << std::endl;
 }
 
-void Grid::handleEvents() {
-    bool running = true;
+bool Grid::handleEvents() {
+    bool closePopup = false;
     const int maxInputLength = 100;
+
+    SDL_Surface* inputSurface = nullptr;
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
                 SDL_StopTextInput();
-                running = false;
-                break;
+                return false;  // Close the whole application on Quit
 
             case SDL_WINDOWEVENT:
                 if (event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
                     SDL_StopTextInput();
-                    running = false;
+                    closePopup = true;
                 }
                 break;
 
@@ -1243,39 +1244,43 @@ void Grid::handleEvents() {
                 if (inputText.length() < maxInputLength) {
                     inputText += event.text.text;
 
-                    if (inputTexture != nullptr) {
-                        SDL_DestroyTexture(inputTexture);
+                    if (inputSurface != nullptr) {
+                        SDL_FreeSurface(inputSurface);
                     }
 
-                    SDL_Surface* inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
+                    inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
                     inputTexture = SDL_CreateTextureFromSurface(renderer, inputSurface);
-                    SDL_FreeSurface(inputSurface);
                 }
                 break;
 
             case SDL_KEYDOWN:
                 if (event.key.keysym.sym == SDLK_BACKSPACE && !inputText.empty()) {
-                    // Handle backspace
                     inputText.pop_back();
 
-                    if (inputTexture != nullptr) {
-                        SDL_DestroyTexture(inputTexture);
+                    if (inputSurface != nullptr) {
+                        SDL_FreeSurface(inputSurface);
                     }
 
-                    SDL_Surface* inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
+                    inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
                     inputTexture = SDL_CreateTextureFromSurface(renderer, inputSurface);
-                    SDL_FreeSurface(inputSurface);
                 } else if (event.key.keysym.sym == SDLK_RETURN) {
-                    // Enter key pressed, clear the input
-                    inputText.clear();
-
-                    if (inputTexture != nullptr) {
-                        SDL_DestroyTexture(inputTexture);
-                    }
-
-                    inputTexture = nullptr;
+                    SDL_StopTextInput();
+                    closePopup = true;
+                    std::cout << "Entered Text: " << inputText << std::endl;
                 }
                 break;
         }
     }
+
+    if (closePopup) {
+        // Close the popup (clean up for the popup window)
+        SDL_DestroyTexture(inputTexture);
+
+        if (inputSurface != nullptr) {
+            SDL_FreeSurface(inputSurface);
+        }
+        return false;  // Close the application after closing the popup
+    }
+
+    return true;  // Continue running the application
 }

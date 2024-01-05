@@ -164,7 +164,7 @@ private:
     bool** readyToBeLinked;
     bool** readyToBeMoved;
 
-    void handleEvents();
+    bool handleEvents();
     TTF_Font* font;
     SDL_Texture* texture;
     SDL_Texture* inputTexture;
