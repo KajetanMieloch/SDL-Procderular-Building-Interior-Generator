@@ -61,6 +61,7 @@ public:
     void generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, int id);
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
+    void render();
     void handleEvent(SDL_Event& e);
     void generateLevel(SDL_Renderer* renderer);
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
@@ -162,6 +163,12 @@ private:
     int** rotate;
     bool** readyToBeLinked;
     bool** readyToBeMoved;
+
+    void handleEvents();
+    TTF_Font* font;
+    SDL_Texture* texture;
+    SDL_Texture* inputTexture;
+    std::string inputText;
 };
 
 #endif

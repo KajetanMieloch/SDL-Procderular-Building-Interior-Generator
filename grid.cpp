@@ -426,7 +426,20 @@ void Grid::setCoursorMode(int mode){
 }
 
 
-void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY) {
+void Grid::render(){
+            SDL_RenderClear(renderer);
+        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+        
+        if (inputTexture != nullptr) {
+            SDL_Rect inputRect = {0, 50, inputText.length() * 15, 30}; // Adjust position and size as needed
+            SDL_RenderCopy(renderer, inputTexture, nullptr, &inputRect);
+        }
+
+        SDL_RenderPresent(renderer);
+}
+
+void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY) {       
+        
         for (int x = startX; x < endX; x++) {
             for (int y = startY; y < endY; y++) {
                 if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
@@ -1156,71 +1169,113 @@ void Grid::loadAllLayers() {
 }
 
 void Grid::saveAsAllLayers() {
-    // Initialize SDL_ttf
     if (TTF_Init() == -1) {
         std::cerr << "TTF_Init: " << TTF_GetError();
         exit(2);
     }
 
-    // Create a window
-    SDL_Window* window = SDL_CreateWindow("Enter filename", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Enter filename", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         std::cerr << "Could not create window: " << SDL_GetError();
         exit(2);
     }
 
-    // Create a renderer
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (renderer == nullptr) {
         std::cerr << "Could not create renderer: " << SDL_GetError();
         exit(2);
     }
 
-    // Load a font
-    TTF_Font* font = TTF_OpenFont("res/Arial.ttf", 24);
+    font = TTF_OpenFont("res/Arial.ttf", 24);
     if (font == nullptr) {
         std::cerr << "TTF_OpenFont: " << TTF_GetError();
         exit(2);
     }
 
-    // Render the text
     SDL_Color color = {255, 255, 255};
     SDL_Surface* surface = TTF_RenderText_Solid(font, "Enter filename:", color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-    // Input text
-    std::string inputText = "";
+    inputText = "";
+    inputTexture = nullptr;
 
-    // Main loop
+    const int maxInputLength = 100;
+
+    SDL_StartTextInput();
+
     bool running = true;
     while (running) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            } else if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
-                running = false;
-            } else if (event.type == SDL_TEXTINPUT) {
-                // Add new text to the input text
-                inputText += event.text.text;
-            }
-            // Handle other events...
-        }
-
-        // Render the text
-        SDL_RenderClear(renderer);
-        SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-        SDL_RenderPresent(renderer);
+        handleEvents();
+        render();
     }
 
-    // Clean up
     SDL_DestroyTexture(texture);
+    SDL_DestroyTexture(inputTexture);
     SDL_FreeSurface(surface);
     TTF_CloseFont(font);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_Quit();
 
-    // Use the input text as the filename
     std::cout << "Filename: " << inputText << std::endl;
+}
+
+void Grid::handleEvents() {
+    bool running = true;
+    const int maxInputLength = 100;
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_QUIT:
+                SDL_StopTextInput();
+                running = false;
+                break;
+
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
+                    SDL_StopTextInput();
+                    running = false;
+                }
+                break;
+
+            case SDL_TEXTINPUT:
+                if (inputText.length() < maxInputLength) {
+                    inputText += event.text.text;
+
+                    if (inputTexture != nullptr) {
+                        SDL_DestroyTexture(inputTexture);
+                    }
+
+                    SDL_Surface* inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
+                    inputTexture = SDL_CreateTextureFromSurface(renderer, inputSurface);
+                    SDL_FreeSurface(inputSurface);
+                }
+                break;
+
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_BACKSPACE && !inputText.empty()) {
+                    // Handle backspace
+                    inputText.pop_back();
+
+                    if (inputTexture != nullptr) {
+                        SDL_DestroyTexture(inputTexture);
+                    }
+
+                    SDL_Surface* inputSurface = TTF_RenderText_Solid(font, inputText.c_str(), {255, 255, 255});
+                    inputTexture = SDL_CreateTextureFromSurface(renderer, inputSurface);
+                    SDL_FreeSurface(inputSurface);
+                } else if (event.key.keysym.sym == SDLK_RETURN) {
+                    // Enter key pressed, clear the input
+                    inputText.clear();
+
+                    if (inputTexture != nullptr) {
+                        SDL_DestroyTexture(inputTexture);
+                    }
+
+                    inputTexture = nullptr;
+                }
+                break;
+        }
+    }
 }
