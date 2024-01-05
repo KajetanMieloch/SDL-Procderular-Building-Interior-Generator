@@ -1031,9 +1031,18 @@ void Grid::generateKitchen(SDL_Renderer* renderer, int x, int y, int w, int h, i
     }
 }
 #include <fstream>
+#include <filesystem>
 
 void Grid::saveFirstLayerToFile(const std::string& filename, FirstLayer layer) {
-    std::ofstream file(filename);
+    std::filesystem::path saveDirectory = std::filesystem::path("saves");
+
+    // Check if the directory exists, and create it if it doesn't
+    if (!std::filesystem::exists(saveDirectory)) {
+        std::filesystem::create_directory(saveDirectory);
+    }
+
+    std::filesystem::path filePath = saveDirectory / filename;
+    std::ofstream file(filePath);
 
     // Write the contents of the grid to the file
     for (int i = 0; i < gridSize; i++) {
@@ -1050,13 +1059,13 @@ void Grid::saveFirstLayerToFile(const std::string& filename, FirstLayer layer) {
         }
         file << "\n";
     }
-
 
     file.close();
 }
 
 void Grid::saveSecondLayerToFile(const std::string& filename, SecondLayer layer) {
-    std::ofstream file(filename);
+    std::filesystem::path filePath = std::filesystem::path("saves") / filename;
+    std::ofstream file(filePath);
 
     // Write the contents of the grid to the file
     for (int i = 0; i < gridSize; i++) {
@@ -1073,10 +1082,13 @@ void Grid::saveSecondLayerToFile(const std::string& filename, SecondLayer layer)
         }
         file << "\n";
     }
+
+    file.close();
 }
 
 void Grid::saveThirdLayerToFile(const std::string& filename, ThirdLayer layer) {
-    std::ofstream file(filename);
+    std::filesystem::path filePath = std::filesystem::path("saves") / filename;
+    std::ofstream file(filePath);
 
     // Write the contents of the grid to the file
     for (int i = 0; i < gridSize; i++) {
@@ -1093,10 +1105,13 @@ void Grid::saveThirdLayerToFile(const std::string& filename, ThirdLayer layer) {
         }
         file << "\n";
     }
+
+    file.close();
 }
 
 void Grid::loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer) {
-    std::ifstream file(filename);
+    std::filesystem::path filePath = std::filesystem::path("saves") / filename;
+    std::ifstream file(filePath);
 
     // Read the contents of the grid from the file
     for (int i = 0; i < gridSize; i++) {
@@ -1116,7 +1131,8 @@ void Grid::loadFirstLayerFromFile(const std::string& filename, FirstLayer& layer
 }
 
 void Grid::loadSecondLayerFromFile(const std::string& filename, SecondLayer& layer){
-        std::ifstream file(filename);
+    std::filesystem::path filePath = std::filesystem::path("saves") / filename;
+    std::ifstream file(filePath);
 
     // Read the contents of the grid from the file
     for (int i = 0; i < gridSize; i++) {
@@ -1136,7 +1152,8 @@ void Grid::loadSecondLayerFromFile(const std::string& filename, SecondLayer& lay
 }
 
 void Grid::loadThirdLayerFromFile(const std::string& filename, ThirdLayer& layer){
-        std::ifstream file(filename);
+    std::filesystem::path filePath = std::filesystem::path("saves") / filename;
+    std::ifstream file(filePath);
 
     // Read the contents of the grid from the file
     for (int i = 0; i < gridSize; i++) {
@@ -1217,7 +1234,10 @@ void Grid::saveAsAllLayers() {
     SDL_DestroyWindow(window);
     TTF_Quit();
 
-    std::cout << "Filename: " << inputText << std::endl;
+    std::cout << "Saving as: " << inputText << std::endl;
+    saveFirstLayerToFile(inputText + "1.txt", firstLayer);
+    saveSecondLayerToFile(inputText + "2.txt", secondLayer);
+    saveThirdLayerToFile(inputText + "3.txt", thirdLayer);
 }
 
 bool Grid::handleEvents() {
