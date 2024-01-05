@@ -62,6 +62,7 @@ public:
     void setTexture(SDL_Texture* texture);
     void render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY);
     void render();
+    void render(SDL_Rect textRect, SDL_Rect inputRect);
     void handleEvent(SDL_Event& e);
     void generateLevel(SDL_Renderer* renderer);
     bool chceckBorderingTilesForId(int x, int y, int id, int layer);
@@ -165,6 +166,7 @@ private:
     bool** readyToBeMoved;
 
     bool handleEvents();
+    void updateInputRectWidth(SDL_Rect& inputRect);
     TTF_Font* font;
     SDL_Texture* texture;
     SDL_Texture* inputTexture;

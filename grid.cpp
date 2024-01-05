@@ -438,6 +438,20 @@ void Grid::render(){
         SDL_RenderPresent(renderer);
 }
 
+void Grid::render(SDL_Rect textRect, SDL_Rect inputRect) {
+    // Clear the renderer
+    SDL_RenderClear(renderer);
+
+    // Render text in the specified rectangle
+    SDL_RenderCopy(renderer, texture, nullptr, &textRect);
+
+    // Render input field in the specified rectangle
+    SDL_RenderCopy(renderer, inputTexture, nullptr, &inputRect);
+
+    // Present the renderer
+    SDL_RenderPresent(renderer);
+}
+
 void Grid::render(SDL_Renderer* renderer, int startX, int startY, int endX, int endY, int cameraX, int cameraY) {       
         
         for (int x = startX; x < endX; x++) {
@@ -808,7 +822,6 @@ std::tuple<int, int, int> Grid::generateRoomWithAllVariations(SDL_Renderer* rend
                 setTileTextureAndRotation(i, j, 103, 2, 90);
                 tiles.push_back(std::make_pair(i, j));
             }
-
             //on corners of rectangle
             if (i == x && j == y) {
                 setTileTextureAndRotation(i, j, 102, 2, 270);
@@ -1187,32 +1200,41 @@ void Grid::loadAllLayers() {
 
 void Grid::saveAsAllLayers() {
     if (TTF_Init() == -1) {
-        std::cerr << "TTF_Init: " << TTF_GetError();
-        exit(2);
+        std::cerr << "TTF_Init: " << TTF_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    window = SDL_CreateWindow("Enter filename", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 100, SDL_WINDOW_SHOWN);
-    if (window == nullptr) {
-        std::cerr << "Could not create window: " << SDL_GetError();
-        exit(2);
+    // Create SDL window with a grid layout
+    window = SDL_CreateWindow("Enter filename", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 400, 150, SDL_WINDOW_SHOWN);
+    if (!window) {
+        std::cerr << "Could not create window: " << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
 
+    // Create SDL renderer
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == nullptr) {
-        std::cerr << "Could not create renderer: " << SDL_GetError();
-        exit(2);
+    if (!renderer) {
+        std::cerr << "Could not create renderer: " << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
 
+    // Load font
     font = TTF_OpenFont("res/Arial.ttf", 24);
-    if (font == nullptr) {
-        std::cerr << "TTF_OpenFont: " << TTF_GetError();
-        exit(2);
+    if (!font) {
+        std::cerr << "TTF_OpenFont: " << TTF_GetError() << std::endl;
+        exit(EXIT_FAILURE);
     }
 
+    // Set up grid layout
+    SDL_Rect textRect = {50, 20, 300, 50}; // x, y, width, height
+    SDL_Rect inputRect = {50, 80, 0, 50}; // x, y, width, height
+
+    // Render text
     SDL_Color color = {255, 255, 255};
     SDL_Surface* surface = TTF_RenderText_Solid(font, "Enter filename:", color);
     texture = SDL_CreateTextureFromSurface(renderer, surface);
 
+    // Render input field
     inputText = "";
     inputTexture = nullptr;
 
@@ -1223,9 +1245,11 @@ void Grid::saveAsAllLayers() {
     bool running = true;
     while (running) {
         running = handleEvents();  // Modify the loop condition based on the events
-        render();
+        updateInputRectWidth(inputRect);
+        render(textRect, inputRect);
     }
 
+    // Clean up SDL resources
     SDL_DestroyTexture(texture);
     SDL_DestroyTexture(inputTexture);
     SDL_FreeSurface(surface);
@@ -1234,10 +1258,22 @@ void Grid::saveAsAllLayers() {
     SDL_DestroyWindow(window);
     TTF_Quit();
 
+    // Save layers
     std::cout << "Saving as: " << inputText << std::endl;
     saveFirstLayerToFile(inputText + "1.txt", firstLayer);
     saveSecondLayerToFile(inputText + "2.txt", secondLayer);
     saveThirdLayerToFile(inputText + "3.txt", thirdLayer);
+}
+
+void Grid::updateInputRectWidth(SDL_Rect& inputRect) {
+    // Get the width of the rendered input text
+    int textWidth = 0;
+    if (inputTexture) {
+        SDL_QueryTexture(inputTexture, nullptr, nullptr, &textWidth, nullptr);
+    }
+
+    // Set the width of the inputRect based on the text width
+    inputRect.w = std::max(100, textWidth + 10); // Minimum width is 100 pixels
 }
 
 bool Grid::handleEvents() {
