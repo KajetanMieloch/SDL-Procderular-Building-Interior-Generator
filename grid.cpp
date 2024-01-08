@@ -1193,10 +1193,97 @@ void Grid::saveAllLayers() {
 }
 
 void Grid::loadAllLayers() {
-    loadFirstLayerFromFile("layer1.txt", firstLayer);
-    loadSecondLayerFromFile("layer2.txt", secondLayer);
-    loadThirdLayerFromFile("layer3.txt", thirdLayer);
+    std::filesystem::path savesDir("saves");
+
+    if (!std::filesystem::exists(savesDir) || !std::filesystem::is_directory(savesDir)) {
+        std::cerr << "Directory 'saves' does not exist.\n";
+        return;
+    }
+
+    // Initialize SDL_ttf
+    if (TTF_Init() == -1) {
+        std::cerr << "Failed to initialize SDL_ttf: " << TTF_GetError() << '\n';
+        return;
+    }
+
+    // Create a window
+    SDL_Window* window = SDL_CreateWindow("Files", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN);
+    if (!window) {
+        std::cerr << "Failed to create window: " << SDL_GetError() << '\n';
+        return;
+    }
+
+    // Create a renderer
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (!renderer) {
+        std::cerr << "Failed to create renderer: " << SDL_GetError() << '\n';
+        return;
+    }
+
+    // Load a font
+    TTF_Font* font = TTF_OpenFont("res/Arial.ttf", 24);
+    if (!font) {
+        std::cerr << "Failed to load font: " << TTF_GetError() << '\n';
+        return;
+    }
+
+    // Render the names of the files
+    int y = 0;
+    for (const auto& entry : std::filesystem::directory_iterator(savesDir)) {
+        if (entry.path().extension() == ".txt") {
+            // Create a surface with the text
+            SDL_Surface* surface = TTF_RenderText_Solid(font, entry.path().stem().string().c_str(), {255, 255, 255, 255});
+            if (!surface) {
+                std::cerr << "Failed to create text surface: " << TTF_GetError() << '\n';
+                continue;
+            }
+
+            // Create a texture from the surface
+            SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+            if (!texture) {
+                std::cerr << "Failed to create text texture: " << SDL_GetError() << '\n';
+                SDL_FreeSurface(surface);
+                continue;
+            }
+
+            // Get the dimensions of the texture
+            int w, h;
+            SDL_QueryTexture(texture, NULL, NULL, &w, &h);
+
+            // Render the texture
+            SDL_Rect rect = {0, y, w, h};
+            SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+            // Clean up
+            SDL_DestroyTexture(texture);
+            SDL_FreeSurface(surface);
+
+            // Move down for the next line of text
+            y += h;
+        }
+    }
+
+    // Present the renderer
+    SDL_RenderPresent(renderer);
+    // Wait for the user to close the window
+    bool running = true;
+    while (running) {
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT) {
+                running = false;
+            }
+        }
+    }
+
+    // Clean up
+    TTF_CloseFont(font);
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    TTF_Quit();
 }
+    
+
 
 void Grid::saveAsAllLayers() {
     if (TTF_Init() == -1) {
@@ -1238,7 +1325,7 @@ void Grid::saveAsAllLayers() {
     inputText = "";
     inputTexture = nullptr;
 
-    const int maxInputLength = 100;
+    const int maxInputLength = 15;
 
     SDL_StartTextInput();
 
@@ -1273,7 +1360,7 @@ void Grid::updateInputRectWidth(SDL_Rect& inputRect) {
     }
 
     // Set the width of the inputRect based on the text width
-    inputRect.w = std::max(100, textWidth + 10); // Minimum width is 100 pixels
+    inputRect.w = std::max(40, textWidth + 10); // Minimum width is 100 pixels
 }
 
 bool Grid::handleEvents() {
