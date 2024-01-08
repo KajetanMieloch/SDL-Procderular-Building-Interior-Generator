@@ -1229,6 +1229,7 @@ void Grid::loadAllLayers() {
 
     // Render the names of the files
     int y = 0;
+    std::vector<std::pair<SDL_Rect, std::filesystem::path>> fileNames;
     for (const auto& entry : std::filesystem::directory_iterator(savesDir)) {
         if (entry.path().extension() == ".txt") {
             // Create a surface with the text
@@ -1246,13 +1247,16 @@ void Grid::loadAllLayers() {
                 continue;
             }
 
-            // Get the dimensions of the texture
+// Get the dimensions of the texture
             int w, h;
             SDL_QueryTexture(texture, NULL, NULL, &w, &h);
 
             // Render the texture
             SDL_Rect rect = {0, y, w, h};
             SDL_RenderCopy(renderer, texture, NULL, &rect);
+
+            // Add the rectangle and file path to the list
+            fileNames.push_back({rect, entry.path()});
 
             // Clean up
             SDL_DestroyTexture(texture);
@@ -1270,8 +1274,22 @@ void Grid::loadAllLayers() {
     while (running) {
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
+            switch (event.type) {
+                case SDL_QUIT:
+                    running = false;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    int x, y;
+                    SDL_GetMouseState(&x, &y);
+                    for (const auto& [rect, path] : fileNames) {
+                        if (x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h) {
+                            // The mouse click occurred on this file name
+                            std::cout << "Clicked on " << path << '\n';
+                            // TODO: Load the layer from this file
+                            break;
+                        }
+                    }
+                    break;
             }
         }
     }
