@@ -1272,24 +1272,28 @@ void Grid::loadAllLayers() {
     // Wait for the user to close the window
     bool running = true;
     while (running) {
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-                case SDL_QUIT:
-                    running = false;
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    int x, y;
-                    SDL_GetMouseState(&x, &y);
-                    for (const auto& [rect, path] : fileNames) {
-                        if (x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h) {
-                            // The mouse click occurred on this file name
-                            std::cout << "Clicked on " << path << '\n';
-                            // TODO: Load the layer from this file
-                            break;
-                        }
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+            case SDL_MOUSEBUTTONDOWN:
+                int x, y;
+                SDL_GetMouseState(&x, &y);
+                for (const auto& [rect, path] : fileNames) {
+                    if (x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h) {
+                        // The mouse click occurred on this file name
+                        std::cout << "Clicked on " << path << '\n';
+                        // TODO: Load the layer from this file
+                        running = false;
+                        break;
                     }
-                    break;
+                }
+                break;
+            //If someone click x then close the window
+            case SDL_WINDOWEVENT:
+                if (event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
+                    running = false;
+                }
+                break;
             }
         }
     }
