@@ -187,6 +187,8 @@ void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate
 }
 
 void Grid::rotateTile(int x, int y, int layer){
+    //If tile clicked is in temporarly linked tiles then rotate all temporarly linked tiles
+    //This should rotate as a whole group, not to rotate individual tiles in group, but rather axis of rotation should be where you clicked
     if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
         switch (layer) {
             case 1:
@@ -1193,6 +1195,11 @@ void Grid::saveAllLayers() {
 }
 
 void Grid::loadAllLayers() {
+
+    int currentPage = 0;
+    const int itemsPerPage = 15;
+
+    
     std::filesystem::path savesDir("saves");
 
     if (!std::filesystem::exists(savesDir) || !std::filesystem::is_directory(savesDir)) {
@@ -1231,7 +1238,10 @@ void Grid::loadAllLayers() {
     int y = 0;
     std::vector<std::pair<SDL_Rect, std::filesystem::path>> fileNames;
     for (const auto& entry : std::filesystem::directory_iterator(savesDir)) {
-        if (entry.path().extension() == ".txt") {
+    std::string filename = entry.path().filename().string();
+    if (filename.substr(filename.length() - 5) == "1.txt") {
+
+
             // Create a surface with the text
             SDL_Surface* surface = TTF_RenderText_Solid(font, entry.path().stem().string().c_str(), {255, 255, 255, 255});
             if (!surface) {
@@ -1281,9 +1291,25 @@ void Grid::loadAllLayers() {
                 for (const auto& [rect, path] : fileNames) {
                     if (x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h) {
                         // The mouse click occurred on this file name
-                        std::cout << "Clicked on " << path << '\n';
-                        // TODO: Load the layer from this file
+                        //create path from path but withot saves/
+                        std::string path1 = path;
+                        path1.replace(0, 6, "");
+                        loadFirstLayerFromFile(path1, firstLayer);
+                        //create path2 from path but with 2.txt
+                        std::string path2 = path1;
+                        path2.replace(path2.length() - 5, 1, "2");
+                        loadSecondLayerFromFile(path2, secondLayer);
+                        //create path3 from path but with 3.txt
+                        std::string path3 = path1;
+                        path3.replace(path3.length() - 5, 1, "3");
+                        loadThirdLayerFromFile(path3, thirdLayer);
+
+                        std::cout << "Loaded: " << path1 << '\n';
+                        std::cout << "Loaded: " << path2 << '\n';
+                        std::cout << "Loaded: " << path3 << '\n';
+                        
                         running = false;
+
                         break;
                     }
                 }

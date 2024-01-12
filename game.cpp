@@ -138,6 +138,8 @@ void Game::handleEvents() {
                     equipment->toggleEquipment();
                     grid->setCoursorMode(0);
                     break;
+                //THIS IS NOT RESPONSIBLE FOR THE ROTATION OF THE TILE AFTER CLICKING ON IT.
+                //IF YOU SEARCH FOR IT GO TO THE rotateTile() METHOD
                 case SDLK_f: {
                     if (activeRotation == 270)
                         activeRotation = 0;
