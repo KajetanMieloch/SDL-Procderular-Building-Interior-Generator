@@ -186,36 +186,71 @@ void Grid::setTileTextureAndRotation(int x, int y, int id, int layer, int rotate
     }
 }
 
-void Grid::rotateTile(int x, int y, int layer){
-    //If tile clicked is in temporarly linked tiles then rotate all temporarly linked tiles
-    //This should rotate as a whole group, not to rotate individual tiles in group, but rather axis of rotation should be where you clicked
-    if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
-        switch (layer) {
-            case 1:
-                if(firstLayer.rotate[x][y] == 270){
-                    firstLayer.rotate[x][y] = 0;
-                }else{
-                    firstLayer.rotate[x][y] += 90;
-                }
-                break;
-            case 2:
-                if(secondLayer.rotate[x][y] == 270){
-                    secondLayer.rotate[x][y] = 0;
-                }else{
-                    secondLayer.rotate[x][y] += 90;
-                }
-                break;
-            case 3:
-                if(thirdLayer.rotate[x][y] == 270){
-                    thirdLayer.rotate[x][y] = 0;
-                }else{
-                    thirdLayer.rotate[x][y] += 90;
-                }
-            default:
-                break;
+void Grid::rotateTile(int x, int y, int layer) {
+    // Output debug information
+    for (const auto& tile : temporarlyLinkedTiles) {
+        std::cout << std::get<0>(tile) << " " << std::get<1>(tile) << " " << std::get<2>(tile) << std::endl;
+    }
+
+    std::cout << "Clicked tile: " << x << " " << y << " " << getTileRotation(x, y, layer) << std::endl;
+
+    // Rotate temporarily linked tiles if the clicked tile is among them
+    auto it = std::find(temporarlyLinkedTiles.begin(), temporarlyLinkedTiles.end(), std::make_tuple(x, y, getTileRotation(x, y, layer)));
+    if (it != temporarlyLinkedTiles.end()) {
+        int centerX = x;  // Store the clicked tile coordinates as the center
+        int centerY = y;
+
+        for (auto& tile : temporarlyLinkedTiles) {
+            int tileX = std::get<0>(tile);
+            int tileY = std::get<1>(tile);
+
+            // Get the current tile ID and rotation
+            int idOfTileBeingRotated = getTileTexture(tileX, tileY, layer);
+            int rotationOfTileBeingRotated = getTileRotation(tileX, tileY, layer);
+
+            // Set the old tile to ID 0
+            setTileTextureAndRotation(tileX, tileY, 0, layer, rotationOfTileBeingRotated);
+
+            // Calculate the relative position of the tile with respect to the center
+            int relativeX = tileX - centerX;
+            int relativeY = tileY - centerY;
+
+            // Perform the rotation around the center
+            int rotatedX = centerX + relativeY;
+            int rotatedY = centerY - relativeX;
+
+            std::cout << "Rotated coordinates: " << rotatedX << " " << rotatedY << std::endl;
+
+            // Ensure the rotated coordinates are within bounds
+            if (rotatedX >= 0 && rotatedX < gridSize && rotatedY >= 0 && rotatedY < gridSize) {
+                // Set the rotated tile to its new ID and rotation
+                setTileTextureAndRotation(rotatedX, rotatedY, idOfTileBeingRotated, layer, rotationOfTileBeingRotated);
+
+                // Update the position in temporarlyLinkedTiles
+                std::get<0>(tile) = rotatedX;
+                std::get<1>(tile) = rotatedY;
+            }
+        }
+    } else {
+        // Rotate the clicked tile if it's not among temporarily linked tiles
+        if (x >= 0 && x < gridSize && y >= 0 && y < gridSize) {
+            switch (layer) {
+                case 1:
+                    firstLayer.rotate[x][y] = (firstLayer.rotate[x][y] == 270) ? 0 : (firstLayer.rotate[x][y] + 90);
+                    break;
+                case 2:
+                    secondLayer.rotate[x][y] = (secondLayer.rotate[x][y] == 270) ? 0 : (secondLayer.rotate[x][y] + 90);
+                    break;
+                case 3:
+                    thirdLayer.rotate[x][y] = (thirdLayer.rotate[x][y] == 270) ? 0 : (thirdLayer.rotate[x][y] + 90);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
+
 
 
 void Grid::handleMouseClick(int x, int y, int id, int rotate) {
